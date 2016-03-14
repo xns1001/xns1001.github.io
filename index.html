@@ -353,7 +353,7 @@
 <blockquote>
 <p><strong>传输加密的流程</strong>:原先是应用层将数据直接给到TCP进行传输，现在改成应用层将数据给到TLS/SSL，将数据加密后，再给到TCP进行传输。</p>
 </blockquote>
-<p><img src="http://upload-images.jianshu.io/upload_images/1689700-1a25e75bba3b1628.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="tls-ssl-_tcp-ip_protocol.png"></p>
+<p><img src="http://7xrven.com1.z0.glb.clouddn.com/net_ssl_tls.png" alt="tls-ssl-_tcp-ip_protocol.png"></p>
 <h2 id="HTTPS是如何加密数据的"><a href="#HTTPS是如何加密数据的" class="headerlink" title="HTTPS是如何加密数据的"></a>HTTPS是如何加密数据的</h2><hr>
 <ol>
 <li>握手认证:<br>客户端发起一次请求后,服务端返回数字证书,客户端接受到后,生成一个对称密钥,再用服务器下发证书中的<strong>公钥对其加密</strong>并发送,服务端接受到客户端发送的加密后的对称密钥后<strong>用自己的私钥解密</strong>,获得<strong>对称密钥</strong>。到此服务端和客户端都拥有了可以用来加密数据的对称密钥，并且可以保证该密钥没有泄漏。</li>
