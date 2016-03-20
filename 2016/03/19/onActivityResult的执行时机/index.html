@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="网络," />
+  <meta name="keywords" content="四大组件," />
 
 
 
@@ -57,27 +57,25 @@
 
 
 
-<meta name="description" content="Http与Https的区别
-简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  
-HTTPS是如何保障安全的
-HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTT">
+<meta name="description" content="前言
+前两天遇到了个onActivityResult执行时机错误的问题，在解决过程中学习了些onActivityResult与setResult的一些细节，记录一下。
+问题
+项目接入一个第三方sdk时，需要在一个webview的容器Activity A中调起登录Activity B，完成登录后，Activity B-&amp;gt;setResult-&amp;gt;finish。这时不是应该A的onActivi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTPS学习">
-<meta property="og:url" content="http://dubhex.com/2016/03/07/HTTPS学习/index.html">
+<meta property="og:title" content="onActivityResult的执行时机">
+<meta property="og:url" content="http://dubhex.com/2016/03/19/onActivityResult的执行时机/index.html">
 <meta property="og:site_name" content="DubheX's Blog">
-<meta property="og:description" content="Http与Https的区别
-简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  
-HTTPS是如何保障安全的
-HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTT">
-<meta property="og:image" content="http://7xrven.com1.z0.glb.clouddn.com/net_ssl_tls.png">
-<meta property="og:updated_time" content="2016-03-15T15:25:40.579Z">
+<meta property="og:description" content="前言
+前两天遇到了个onActivityResult执行时机错误的问题，在解决过程中学习了些onActivityResult与setResult的一些细节，记录一下。
+问题
+项目接入一个第三方sdk时，需要在一个webview的容器Activity A中调起登录Activity B，完成登录后，Activity B-&amp;gt;setResult-&amp;gt;finish。这时不是应该A的onActivi">
+<meta property="og:updated_time" content="2016-03-20T05:45:09.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTTPS学习">
-<meta name="twitter:description" content="Http与Https的区别
-简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  
-HTTPS是如何保障安全的
-HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTT">
-<meta name="twitter:image" content="http://7xrven.com1.z0.glb.clouddn.com/net_ssl_tls.png">
+<meta name="twitter:title" content="onActivityResult的执行时机">
+<meta name="twitter:description" content="前言
+前两天遇到了个onActivityResult执行时机错误的问题，在解决过程中学习了些onActivityResult与setResult的一些细节，记录一下。
+问题
+项目接入一个第三方sdk时，需要在一个webview的容器Activity A中调起登录Activity B，完成登录后，Activity B-&amp;gt;setResult-&amp;gt;finish。这时不是应该A的onActivi">
 
 
 
@@ -95,7 +93,7 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
   };
 </script>
 
-  <title> HTTPS学习 | DubheX's Blog </title>
+  <title> onActivityResult的执行时机 | DubheX's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -235,7 +233,7 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
             
             
               
-                HTTPS学习
+                onActivityResult的执行时机
               
             
           </h1>
@@ -247,8 +245,8 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-07T00:00:00+08:00" content="2016-03-07">
-              2016-03-07
+            <time itemprop="dateCreated" datetime="2016-03-19T00:00:00+08:00" content="2016-03-19">
+              2016-03-19
             </time>
           </span>
 
@@ -261,8 +259,8 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/网络/" itemprop="url" rel="index">
-                    <span itemprop="name">网络</span>
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
                   </a>
                 </span>
 
@@ -277,8 +275,8 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/03/07/HTTPS学习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/HTTPS学习/" itemprop="commentsCount"></span>
+                <a href="/2016/03/19/onActivityResult的执行时机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/19/onActivityResult的执行时机/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -300,56 +298,31 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
       
 
       
-        <h2 id="Http与Https的区别"><a href="#Http与Https的区别" class="headerlink" title="Http与Https的区别"></a>Http与Https的区别</h2><hr>
-<p>简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  </p>
-<h2 id="HTTPS是如何保障安全的"><a href="#HTTPS是如何保障安全的" class="headerlink" title="HTTPS是如何保障安全的"></a>HTTPS是如何保障安全的</h2><hr>
-<p>HTTPS其实就是<strong>secure http</strong>的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTTP协议之下是传输协议TCP。TCP负责传输，HTTP则定义了数据如何进行包装。</p>
-<blockquote>
-<p><strong>传输加密的流程</strong>:原先是应用层将数据直接给到TCP进行传输，现在改成应用层将数据给到TLS/SSL，将数据加密后，再给到TCP进行传输。</p>
-</blockquote>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+<p>前两天遇到了个onActivityResult执行时机错误的问题，在解决过程中学习了些onActivityResult与setResult的一些细节，记录一下。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><hr>
+<p>项目接入一个第三方sdk时，需要在一个webview的容器Activity A中调起登录Activity B，完成登录后，Activity B-&gt;setResult-&gt;finish。这时不是应该A的onActivityResult执行吗？可是却什么都没有发生。</p>
 <a id="more"></a>
-<p><img src="http://7xrven.com1.z0.glb.clouddn.com/net_ssl_tls.png" alt="tls-ssl-_tcp-ip_protocol.png"></p>
-<h2 id="HTTPS是如何加密数据的"><a href="#HTTPS是如何加密数据的" class="headerlink" title="HTTPS是如何加密数据的"></a>HTTPS是如何加密数据的</h2><hr>
-<ol>
-<li>握手认证:<br>客户端发起一次请求后,服务端返回数字证书,客户端接受到后,生成一个对称密钥,再用服务器下发证书中的<strong>公钥对其加密</strong>并发送,服务端接受到客户端发送的加密后的对称密钥后<strong>用自己的私钥解密</strong>,获得<strong>对称密钥</strong>。到此服务端和客户端都拥有了可以用来加密数据的对称密钥，并且可以保证该密钥没有泄漏。</li>
-<li>传输阶段<br>客户端和服务端用上面得到的对称密钥将数据加密后正常传输。</li>
-</ol>
-<h2 id="HTTPS如何做到安全的"><a href="#HTTPS如何做到安全的" class="headerlink" title="HTTPS如何做到安全的"></a>HTTPS如何做到安全的</h2><hr>
-<p>关于对称加密和非对称加密就不在此赘述了,详见[<a href="http://blog.csdn.net/bluishglc/article/details/7585965" target="_blank" rel="external">http://blog.csdn.net/bluishglc/article/details/7585965</a>]</p>
-<p>由上面的Https握手过称可以知道,Https的安全性很大程度上取决于服务器下发的公钥,所以先了解下证书:<br>在正式介绍证书的格式前，必须先科普下数字签名和摘要，然后再对证书进行非深入的介绍。<br>为什么呢？因为数字签名、摘要是证书防伪非常关键的武器。</p>
-<h3 id="数字签名与摘要"><a href="#数字签名与摘要" class="headerlink" title="数字签名与摘要"></a>数字签名与摘要</h3><p>简单的来说，“摘要”就是对传输的内容，通过hash算法计算出一段固定长度的串（是不是联想到了文章摘要）。然后，在通过CA的私钥对这段摘要进行加密，加密后得到的结果就是“数字签名”。（这里提到CA的私钥，后面再进行介绍）</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><hr>
+<p>首先查看了B的setResult调用没有问题，然后又确认了启动模式也是 standard的没有问题。不过发现结束登录activity B后回到A后再按下back键，A的onActivityResult就执行了（A为webview的activity，activity栈里有多个实例）。感觉好像有点线索了，于是看第三方sdk的提供的activity，原来在它的activity中使用了一个static 的stack来自己管理activity栈，而启动B是在一个js接口回调提供给A的启动者的，这下就解决问题了。问题在与调用startactivityforresult的activity与B finish后的退回的activity不是一个对象，修改了activity栈相关的代码，bug果然解决了。</p>
+<h2 id="总结下onActivityResult执行错误常见原因"><a href="#总结下onActivityResult执行错误常见原因" class="headerlink" title="总结下onActivityResult执行错误常见原因"></a>总结下onActivityResult执行错误常见原因</h2><hr>
+<p><strong>1. 待跳转的Activity启动模式错误：</strong><br>   standard与singletop模式是会在跳转后的Activity finish后执行onActivityResult，而singletask和singleinstance模式是在startActivityforresult后立即执行onActivityResult；</p>
+<p><strong>2. startActivityforresult（）的第二个参数requestCode必须&gt;=0,而且&lt;0xffff</strong><br>api文档里是这么说的：</p>
 <blockquote>
-<p>明文 –&gt; hash运算 –&gt; 摘要 –&gt; 私钥加密 –&gt; 数字签名</p>
+<p>@param requestCode If &gt;= 0, this code will be returned in*                    onActivityResult() when the activity exits.</p>
 </blockquote>
-<p>结合上面内容，我们知道，这段数字签名只有CA的公钥才能够解密。<br>接下来，我们再来看看神秘的“证书”究竟包含了什么内容，然后就大致猜到是如何对非法证书进行预防的了。<br>数字签名、摘要进一步了解可参考 <a href="http://blog.csdn.net/bluishglc/article/details/7585965" target="_blank" rel="external">这篇文章</a>。</p>
-<h3 id="证书格式"><a href="#证书格式" class="headerlink" title="证书格式"></a>证书格式</h3><p>先无耻的贴上一大段内容，证书格式来自这篇不错的文章《<a href="http://seanlook.com/2015/01/15/openssl-certificate-encryption/" target="_blank" rel="external">OpenSSL 与 SSL 数字证书概念贴</a>》<br>内容非常多，这里我们需要关注的有几个点：</p>
+<p><strong>3. 在TabHost的子Activity中startActivityForResult调用其他Activity时候遭遇到onActivityResult方法不响应：</strong><br>这个问题主要还是和activitygroup有关，不过TabHost也是过时很久了，最好不要用。这个问题可以通过如下办法解决：</p>
 <ul>
-<li><p>证书包含了颁发证书的机构的名字 – CA</p>
+<li><p>通过父Activity启动其他Activity;</p>
 </li>
-<li><p>证书内容本身的数字签名（用CA私钥加密）</p>
+<li><p>实现父Activity的onActivityResult方法,将该处接收到的请求转发给当前活动的子Activity;</p>
 </li>
-<li><p>证书持有者的公钥</p>
+<li><p>自定义一个转发接口用来实现第2步中的转发功能;</p>
 </li>
-<li><p>证书签名用到的hash算法</p>
+<li><p>子Activity中实现第3步接口中的方法用来接收返回信息;</p>
 </li>
 </ul>
-<p>此外，有一点需要补充下，就是：<br>CA本身有自己的证书，江湖人称“根证书”。这个“根证书”是用来证明CA的身份的，本质是一份普通的数字证书。<br>浏览器通常会内置大多数主流权威CA的根证书。<br>如何辨别非法证书<br>上面提到，XX证书包含了如下内容：</p>
-<p>证书包含了颁发证书的机构的名字 – CA<br>证书内容本身的数字签名（用CA私钥加密）<br>证书持有者的公钥<br>证书签名用到的hash算法<br>浏览器内置的CA的根证书包含了如下关键内容：</p>
-<h3 id="CA的公钥（非常重要！！！）"><a href="#CA的公钥（非常重要！！！）" class="headerlink" title="CA的公钥（非常重要！！！）"></a>CA的公钥（非常重要！！！）</h3><p>好了，接下来针对之前提到的两种非法证书的场景，讲解下怎么识别</p>
-<ul>
-<li><p>完全伪造的证书<br>这种情况比较简单，对证书进行检查：<br>证书颁发的机构是伪造的：浏览器不认识，直接认为是危险证书<br>证书颁发的机构是确实存在的，于是根据CA名，找到对应内置的CA根证书、CA的公钥。<br>用CA的公钥，对伪造的证书的摘要进行解密，发现解不了。认为是危险证书</p>
-</li>
-<li><p>篡改过的证书<br>假设代理通过某种途径，拿到XX的证书，然后将证书的公钥偷偷修改成自己的，然后喜滋滋的认为用户要上钩了。然而太单纯了：<br>1.检查证书，根据CA名，找到对应的CA根证书，以及CA的公钥。<br>2.用CA的公钥，对证书的数字签名进行解密，得到对应的证书摘要AA<br>3.根据证书签名使用的hash算法，计算出当前证书的摘要BB<br>4.对比AA跟BB，发现不一致–&gt; 判定是危险证书</p>
-</li>
-</ul>
-<h2 id="HTTPS的劣势"><a href="#HTTPS的劣势" class="headerlink" title="HTTPS的劣势"></a>HTTPS的劣势</h2><hr>
-<p>https的主要缺点就是性能问题。造成https性能低于http的原因有两个：</p>
-<ol>
-<li>对数据进行加解密决定了它比http慢。</li>
-<li>另外一个重要原因的是https禁用了缓存。相关测试数据表明使用HTTPS协议传输数据的工作效率只有使用HTTP协议传输的十分之一。因此对于一个网站来说，只有那对那些安全要求极高的的数据才会选择使用https进行传输。</li>
-</ol>
-<hr>
-<p>本文主要来自<a href="https://segmentfault.com/a/1190000004523659" target="_blank" rel="external">https://segmentfault.com/a/1190000004523659</a>, 自己做了些修改</p>
+<p><strong>4. 调用startactivityforresult的activity与跳转的activity finish后返回的activity必须是同一个：</strong><br>这就是我出现的bug，注意startactivityforresult的调用者不要错了。</p>
 
       
     </div>
@@ -364,7 +337,7 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
       
         <div class="post-tags">
           
-            <a href="/tags/网络/" rel="tag">#网络</a>
+            <a href="/tags/四大组件/" rel="tag">#四大组件</a>
           
         </div>
       
@@ -373,13 +346,13 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/03/07/HTTPS学习/" rel="next" title="HTTPS学习">
+                <i class="fa fa-chevron-left"></i> HTTPS学习
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/03/19/onActivityResult的执行时机/" rel="prev" title="onActivityResult的执行时机">
-                onActivityResult的执行时机 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -394,10 +367,10 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/03/07/HTTPS学习/"
-     data-title="HTTPS学习"
+        <div class="ds-share flat" data-thread-key="2016/03/19/onActivityResult的执行时机/"
+     data-title="onActivityResult的执行时机"
      data-content=""
-     data-url="http://dubhex.com/2016/03/07/HTTPS学习/">
+     data-url="http://dubhex.com/2016/03/19/onActivityResult的执行时机/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -424,8 +397,8 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/07/HTTPS学习/"
-           data-title="HTTPS学习" data-url="http://dubhex.com/2016/03/07/HTTPS学习/">
+      <div class="ds-thread" data-thread-key="2016/03/19/onActivityResult的执行时机/"
+           data-title="onActivityResult的执行时机" data-url="http://dubhex.com/2016/03/19/onActivityResult的执行时机/">
       </div>
     
   </div>
@@ -538,7 +511,7 @@ HTTPS其实就是secure http的意思,也就是HTTP的安全升级版。稍微�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Http与Https的区别"><span class="nav-number">1.</span> <span class="nav-text">Http与Https的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS是如何保障安全的"><span class="nav-number">2.</span> <span class="nav-text">HTTPS是如何保障安全的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS是如何加密数据的"><span class="nav-number">3.</span> <span class="nav-text">HTTPS是如何加密数据的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS如何做到安全的"><span class="nav-number">4.</span> <span class="nav-text">HTTPS如何做到安全的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数字签名与摘要"><span class="nav-number">4.1.</span> <span class="nav-text">数字签名与摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#证书格式"><span class="nav-number">4.2.</span> <span class="nav-text">证书格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CA的公钥（非常重要！！！）"><span class="nav-number">4.3.</span> <span class="nav-text">CA的公钥（非常重要！！！）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS的劣势"><span class="nav-number">5.</span> <span class="nav-text">HTTPS的劣势</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结下onActivityResult执行错误常见原因"><span class="nav-number">4.</span> <span class="nav-text">总结下onActivityResult执行错误常见原因</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
