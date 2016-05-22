@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python," />
+  <meta name="keywords" content="Binder," />
 
 
 
@@ -57,22 +57,21 @@
 
 
 
-<meta name="description" content="python开发环境配置关于版本： 2.X和3.X的区别还是挺大的，但是最后肯定新版本会取代旧版本，所以我还是安装了最新的3.5.1 
-具体安装就没什么好说的了，装完了在命令行里输入python就可以进入python环境了。最后不要忘了在我的电脑里配置下path的环境变量。
-编辑器：网上看了很多人的选择，pycharm功能口碑不错，功能比较强大。不过我现阶段主要还是学习，都是写一些小demo，简单">
+<meta name="description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
+我们知道，Android系统是基于Linux内核的，而Li">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python学习笔记1-环境搭建、基本语法">
-<meta property="og:url" content="http://dubhex.com/2016/04/11/python学习笔记1-环境搭建、基本语法/index.html">
+<meta property="og:title" content="Android IPC机制1-Binder概述及学习计划">
+<meta property="og:url" content="http://dubhex.com/2016/04/30/Android IPC机制1-Binder概述及学习计划/index.html">
 <meta property="og:site_name" content="DubheX's Blog">
-<meta property="og:description" content="python开发环境配置关于版本： 2.X和3.X的区别还是挺大的，但是最后肯定新版本会取代旧版本，所以我还是安装了最新的3.5.1 
-具体安装就没什么好说的了，装完了在命令行里输入python就可以进入python环境了。最后不要忘了在我的电脑里配置下path的环境变量。
-编辑器：网上看了很多人的选择，pycharm功能口碑不错，功能比较强大。不过我现阶段主要还是学习，都是写一些小demo，简单">
-<meta property="og:updated_time" content="2016-05-22T03:01:47.524Z">
+<meta property="og:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
+我们知道，Android系统是基于Linux内核的，而Li">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-05-22T03:05:02.236Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="python学习笔记1-环境搭建、基本语法">
-<meta name="twitter:description" content="python开发环境配置关于版本： 2.X和3.X的区别还是挺大的，但是最后肯定新版本会取代旧版本，所以我还是安装了最新的3.5.1 
-具体安装就没什么好说的了，装完了在命令行里输入python就可以进入python环境了。最后不要忘了在我的电脑里配置下path的环境变量。
-编辑器：网上看了很多人的选择，pycharm功能口碑不错，功能比较强大。不过我现阶段主要还是学习，都是写一些小demo，简单">
+<meta name="twitter:title" content="Android IPC机制1-Binder概述及学习计划">
+<meta name="twitter:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
+我们知道，Android系统是基于Linux内核的，而Li">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -90,7 +89,7 @@
   };
 </script>
 
-  <title> python学习笔记1-环境搭建、基本语法 | DubheX's Blog </title>
+  <title> Android IPC机制1-Binder概述及学习计划 | DubheX's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -250,7 +249,7 @@
             
             
               
-                python学习笔记1-环境搭建、基本语法
+                Android IPC机制1-Binder概述及学习计划
               
             
           </h1>
@@ -262,8 +261,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-11T00:00:00+08:00" content="2016-04-11">
-              2016-04-11
+            <time itemprop="dateCreated" datetime="2016-04-30T00:00:00+08:00" content="2016-04-30">
+              2016-04-30
             </time>
           </span>
 
@@ -273,8 +272,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/04/11/python学习笔记1-环境搭建、基本语法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/11/python学习笔记1-环境搭建、基本语法/" itemprop="commentsCount"></span>
+                <a href="/2016/04/30/Android IPC机制1-Binder概述及学习计划/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/30/Android IPC机制1-Binder概述及学习计划/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -296,50 +295,49 @@
       
 
       
-        <h2 id="python开发环境配置"><a href="#python开发环境配置" class="headerlink" title="python开发环境配置"></a>python开发环境配置</h2><p><strong>关于版本：</strong> 2.X和3.X的区别还是挺大的，但是最后肯定新版本会取代旧版本，所以我还是安装了最新的3.5.1 </p>
-<p>具体安装就没什么好说的了，装完了在命令行里输入python就可以进入python环境了。最后不要忘了在我的电脑里配置下path的环境变量。</p>
-<p><strong>编辑器：</strong><br>网上看了很多人的选择，pycharm功能口碑不错，功能比较强大。不过我现阶段主要还是学习，都是写一些小demo，简单些的编辑器就可以了。正好电脑上有sublime ，就装了些python的插件，用来写写简单的python代码也挺好的。</p>
-<h2 id="变量与基本数据类型"><a href="#变量与基本数据类型" class="headerlink" title="变量与基本数据类型"></a>变量与基本数据类型</h2><p>python是动态弱类型语言，简单的讲就是变量不区分类型，定义时不用定义类型。从Java、C++等强类型语言过来的确实感觉有点不适应。不过久了就适应了，而且弱类型确实方便了不少。</p>
-<a id="more"></a>
-<p>其基本数据类型有以下几种：</p>
+        <h2 id="Binder概述"><a href="#Binder概述" class="headerlink" title="Binder概述"></a>Binder概述</h2><h3 id="Linux的进程间通信机制"><a href="#Linux的进程间通信机制" class="headerlink" title="Linux的进程间通信机制"></a>Linux的进程间通信机制</h3><p><a href="http://lib.csdn.net/base/15" target="_blank" rel="external">Android</a>系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。</p>
+<pre><code>我们知道，Android系统是基于Linux内核的，而Linux内核继承和兼容了丰富的Unix系统进程间通信（IPC）机制。有传统的管道（Pipe）、信号（Signal）和跟踪（Trace），这三项通信手段只能用于父进程与子进程之间，或者兄弟进程之间；后来又增加了命令管道（Named Pipe），使得进程间通信不再局限于父子进程或者兄弟进程之间；为了更好地支持商业应用中的事务处理，在AT&amp;T的Unix系统V中，又增加了三种称为“System V IPC”的进程间通信机制，分别是报文队列（Message）、共享内存（Share Memory）和信号量（Semaphore）；后来BSD Unix对“System V IPC”机制进行了重要的扩充，提供了一种称为插口（Socket）的进程间通信机制。若想进一步详细了解这些进程间通信机制，建议参考罗升阳老师的[Android学习启动篇](http://blog.csdn.net/luoshengyang/article/details/6557518)一文中提到《Linux内核源代码情景分析》一书。
+</code></pre><a id="more"></a>
+<h3 id="各个进程间通信方式比较"><a href="#各个进程间通信方式比较" class="headerlink" title="各个进程间通信方式比较:"></a>各个进程间通信方式比较:</h3><ul>
+<li><strong>管道：</strong>在创建时分配一个page大小的内存，缓存区大小比较有限；</li>
+<li><strong>消息队列</strong>：信息复制两次，额外的CPU消耗；不合适频繁或信息量大的通信；</li>
+<li><strong>共享内存</strong>：无须复制，共享缓冲区直接付附加到进程虚拟地址空间，速度快；但进程间的同步问题操作系统无法实现，必须各进程利用同步工具解决；</li>
+<li><strong>套接字</strong>：作为更通用的接口，传输效率低，主要用于不通机器或跨网络的通信；</li>
+<li><strong>信号量</strong>：常作为一种锁机制，防止某进程正在访问共享资源时，其他进程也访问该资源。因此，主要作为进程间以及同一进程内不同线程之间的同步手段。</li>
+<li><strong>信号</strong>: 不适用于信息交换，更适用于进程中断控制，比如非法内存访问，杀死某个进程等；</li>
+</ul>
+<h3 id="Binder的优势"><a href="#Binder的优势" class="headerlink" title="Binder的优势"></a>Binder的优势</h3><ul>
+<li>从性能的角度</li>
+</ul>
+<p><strong>数据拷贝次数：</strong>Binder数据拷贝只需要一次，而管道、消息队列、Socket都需要2次，但共享内存方式一次内存拷贝都不需要；从性能角度看，Binder性能仅次于共享内存。</p>
+<ul>
+<li>从稳定性的角度</li>
+</ul>
+<p>Binder是基于C/S架构的，C/S架构是指客户端(Client)和服务端(Server)组成的架构，Client端有什么需求，直接发送给Server端去完成，架构清晰明朗，Server端与Client端相对独立，稳定性较好；而共享内存实现方式复杂，没有客户与服务端之别， 需要充分考虑到访问临界资源的并发同步问题，否则可能会出现死锁等问题；从这稳定性角度看，Binder架构优越于共享内存。</p>
+<ul>
+<li>从安全的角度</li>
+</ul>
+<p>传统Linux IPC的接收方无法获得对方进程可靠的UID/PID，从而无法鉴别对方身份；而Android作为一个开放的开源体系，拥有非常多的开发平台，App来源甚广，因此手机的安全显得额外重要；对于普通用户，绝不希望从App商店下载偷窥隐射数据、后台造成手机耗电等等问题，传统Linux IPC无任何保护措施，完全由上层协议来确保。Android为每个安装好的应用程序分配了自己的UID，故进程的UID是鉴别进程身份的重要标志，前面提到C/S架构，<strong>Android系统中对外只暴露Client端，Client端将任务发送给Server端，Server端会根据权限控制策略，判断UID/PID是否满足访问权限，目前权限控制很多时候是通过弹出权限询问对话框，让用户选择是否运行</strong>。Android 6.0，也称为Android M，在6.0之前的系统是在App第一次安装时，会将整个App所涉及的所有权限一次询问，只要留意看会发现很多App根本用不上通信录和短信，但在这一次性权限权限时会包含进去，让用户拒绝不得，因为拒绝后App无法正常使用，而一旦授权后，应用便可以胡作非为。针对这个问题，google在Android M做了调整，不再是安装时一并询问所有权限，而是在App运行过程中，需要哪个权限再弹框询问用户是否给相应的权限，对权限做了更细地控制，让用户有了更多的可控性，但<strong>同时也带来了另一个用户诟病的地方，那也就是权限询问的弹框的次数大幅度增多。</strong>对于Android M平台上，有些App开发者可能会写出让手机异常频繁弹框的App，企图直到用户授权为止，这对用户来说是不能忍的，用户最后吐槽的可不光是App，还有Android系统以及手机厂商，有些用户可能就跳果粉了，这还需要广大Android开发者以及手机厂商共同努力，共同打造安全与体验俱佳的Android手机。</p>
+<p><strong>传统IPC</strong>只能由用户在数据包里填入UID/PID；另外，可靠的身份标记只有由IPC机制本身在内核中添加。其次传统IPC访问接入点是开放的，无法建立私有通道。从安全角度，Binder的安全性更高。</p>
+<ul>
+<li>从语言层面的角度</li>
+</ul>
+<p>大家多知道Linux是基于C语言(面向过程的语言)，而Android是基于Java语言(面向对象的语句)，而对于Binder恰恰也符合面向对象的思想，将进程间通信转化为通过对某个Binder对象的引用调用该对象的方法，而其独特之处在于Binder对象是一个可以跨进程引用的对象，它的实体位于一个进程中，而它的引用却遍布于系统的各个进程之中。可以从一个进程传给其它进程，让大家都能访问同一Server，就像将一个对象或引用赋值给另一个引用一样。Binder模糊了进程边界，淡化了进程间通信过程，整个系统仿佛运行于同一个面向对象的程序之中。</p>
+<p>从语言层面，Binder更适合基于面向对象语言的Android系统，对于Linux系统可能会有点“水土不服”。<strong>另外，Binder是为Android这类系统而生，而并非Linux社区没有想到Binder IPC机制的存在。</strong>也并非Linux现有的IPC机制不够好，相反地，经过这么多优秀工程师的不断打磨，依然非常优秀，每种Linux的IPC机制都有存在的价值，同时在Android系统中也依然采用了大量Linux现有的IPC机制，根据每类IPC的原理特性，因时制宜，不同场景特性往往会采用其下最适宜的。比如在<strong>Android OS中的Zygote进程的IPC采用的是Socket（套接字）机制</strong>，Android中的<strong>Kill Process采用的signal（信号）机制</strong>等等。而<strong>Binder更多则用在system_server进程与上层App层的IPC交互</strong>。</p>
+<h3 id="Binder的缺点"><a href="#Binder的缺点" class="headerlink" title="Binder的缺点"></a>Binder的缺点</h3><p>Binder对CPU和内存的需求比较低，效率比较高，从而进一步说明Binder适合于移动系统Android，但是，也有一定缺点，就是不同利用Binder输出大数据，比如利用Binder传输几M大小的图片，便会出现异常，虽然有厂商会增加Binder内存，但是也不可能比系统默认内存大很多，否则整个系统的可用内存大幅度降低。</p>
+<p>讲了Binder的这么多好处,就来看看Binder是如何运行起来的吧!</p>
+<h2 id="学习计划"><a href="#学习计划" class="headerlink" title="学习计划"></a>学习计划</h2><p><img src="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Binder通信流程"></p>
+<p>完成一次Client到Server通信的流转还是比较复杂的,从应用层到Framework层、从UserSpace到KernelSpace、从Java层到Jni层都涉及到了。Binder学习的这个过程也可以对Android、Linux系统有更深入的了解。</p>
+<p>废话就不多说了，回到正题。个人先简单总结了几大主要步骤:</p>
 <ol>
-<li>整型：<br>在Python内部对整数的处理分为普通整数和长整数，普通整数长度为机器位长，通常都是32位，超过这个范围的整数就自动当长整数处理，而长整数的范围几乎完全没限制。所以long类型运算内部使用大数字算法实现，可以做到无长度限制。</li>
-<li>浮点型<br>Python的浮点数就是数学中的小数，类似C语言中的double。在运算中，整数与浮点数运算的结果是浮点数浮点数也就是小数，之所以称为浮点数，是因为按照科学记数法表示时，一个浮点数的小数点位置是可变的，比如，1.23x109和12.3x108是相等的。浮点数可以用数学写法，如1.23，3.14，-9.01，等等。但是对于很大或很小的浮点数，就必须用科学计数法表示，把10用e替代，1.23x109就是1.23e9，或者12.3e8，0.000012可以写成1.2e-5，等等。</li>
-<li>字符串<br>Python字符串即可以用单引号也可以用双引号括起来，字符串是以’’或””括起来的任意文本，比如’abc’，”xyz”等等。请注意，’’或””本身只是一种表示方式，不是字符串的一部分，因此，字符串’abc’只有a，b，c这3个字符。如果’本身也是一个字符，那就可以用””括起来，比如”I’m OK”包含的字符是I，’，m，空格，O，K这6个字符。<br>如果字符串内部既包含’又包含”怎么办？可以用转义字符\来标识，比如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;I\&apos;m \&quot;OK\&quot;!&apos;</span><br></pre></td></tr></table></figure>
-</li>
+<li>ServiceManager启动,注册成为Binder通信的上下文管理者</li>
+<li>如何获取Service Manager</li>
+<li>Server启动并向Service Manager注册</li>
+<li>Client通过ServiceManager获取Service信息</li>
+<li>Client根据得到的Service信息建立与Service所在的Server进程通信的通路，然后直接与Service交互。</li>
 </ol>
-<p>其表示的是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I&apos;m &quot;OK&quot;!</span><br></pre></td></tr></table></figure></p>
-<p>转义字符\可以转义很多字符，比如\n表示换行，\t表示制表符，字符\本身也要转义，所以\表示的字符就是\，可以在Python的交互式命令行用print打印字符串看看：<br>如果一个字符串包含很多需要转义的字符，对每一个字符都进行转义会很麻烦。为了避免这种情况，我们可以在字符串前面加个前缀 r<br>，表示这是一个 raw 字符串，里面的字符就不需要转义了。例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r&apos;\(~_~)/ \(~_~)/&apos;</span><br></pre></td></tr></table></figure></p>
-<p><strong>Unicode编码</strong>：<br>因为Python的诞生比Unicode标准发布的时间还要早，所以最早的Python只支持ASCII编码，普通的字符串’ABC’在Python内部都是ASCII编码的。<br>Python在后来添加了对Unicode的支持，以Unicode表示的字符串用u’…’表示，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print u&apos;中文&apos;</span><br><span class="line">中文</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li><p>空（None）<br>表示该值是一个空对象，空值是Python里一个特殊的值，用None表示。None不能理解为0，因为0是有意义的，而None是一个特殊的空值</p>
-</li>
-<li><p>布尔类型（Boolean）<br>在Python中，None、任何数值类型中的0、空字符串“”、空元组()、空列表[]、空字典{}都被当作False，还有自定义类型，如果实现了<strong>nonzero</strong>()或<strong>len</strong>()方法且方法返回0或False，则其实例也被当作False，其他对象均为True布尔值和布尔代数的表示完全一致，一个布尔值只有True、False两种值，要么是True，要么是False，在Python中，可以直接用True、False表示布尔值（请注意大小写）</p>
-</li>
-</ol>
-<h2 id="代码格式与基本语句"><a href="#代码格式与基本语句" class="headerlink" title="代码格式与基本语句"></a>代码格式与基本语句</h2><p>说起代码格式，python确实算得上奇葩了，代码块的区分竟然是靠<strong>缩进</strong>来控制的。在java里我一向是用tab键的，可python可一定要区分清楚tab和空格（最好不要用tab）。</p>
-<p>个人觉得为了少写点{}而靠缩进来控制代码 真的不是什么好主意，可是规定就是这样，也没办法了，只能遵守吧</p>
-<p>下面是一段简单的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">def square_of_sum(L):</span><br><span class="line"></span><br><span class="line">    sum = 0</span><br><span class="line"></span><br><span class="line">    for a in L:</span><br><span class="line"></span><br><span class="line">        t = a * a</span><br><span class="line"></span><br><span class="line">        sum = sum + t</span><br><span class="line"></span><br><span class="line">    return sum</span><br><span class="line"></span><br><span class="line">print (square_of_sum([1, 2, 3, 4, 5]))</span><br><span class="line"></span><br><span class="line">print (square_of_sum([-5, 0, 5, 15, 25]))</span><br></pre></td></tr></table></figure></p>
-<p>还好上面循环里面的代码和层数不多，如果多了些的话确实要多留意些。</p>
-<ol>
-<li><p>条件判断<br>python的if语句和其他语言大概也差不多，就是if后面不用加括号，判断体输入完了后注意加“:”,代码块是4个空格缩进。<br>另外python对else if定义了单独的一个关键字：”elif “</p>
-</li>
-<li><p>while循环<br>这个和java语言的基本一致，通过while关键字后面的判断体判断是否进入代码块。在代码块里面可以通过break和continue退出或者继续</p>
-</li>
-<li><p>for循环<br>其实全称应该是for in循环，相当于java里面的for each循环，主要用于循环数据容器，而没有java中的for(;;)的功能</p>
-</li>
-</ol>
-<h2 id="List-与Tuple类型"><a href="#List-与Tuple类型" class="headerlink" title="List 与Tuple类型"></a>List 与Tuple类型</h2><ol>
-<li>List<br>基本的列表结构，因为python是弱类型语言，所以List也是不区分类型的，而且定义一个表时也没有什么关键字，通过[]符号就可以了，如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">L = [&apos;Tom&apos;, 100, True]</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>也可以创建空表：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">empty_list = []</span><br></pre></td></tr></table></figure></p>
-<p>数据访问：<br>python支持正反两个方向访问，如L[0]是第一个元素，L[-1]是最后一个元素。这负方向访问，这个确实带来了很多方便。不过注意的是，如果索引值大于list长度，就会发生角标越界，程序会crash。<br>数据添加：<br>通过append(‘v’)方法可以在list尾端添加元素，而insert(0，’v’)就可以在制定位置插入值了，insert角标后面的所有元素，都自动向后移动一位。<br>数据删除<br>和插入类似，删除也有两个方法，pop()可以删除尾端的元素，pop(3)可以删除制定index的元素，删除之后，后面的元素会前进一位。</p>
-<p>2.Tuple<br>tuple是另一种有序的列表，中文翻译为“ 元组 ”。tuple 和 list 非常类似，但是，tuple一旦创建完毕，就不能修改了。tuple表示如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">t = (&apos;Adam&apos;, True 3)</span><br></pre></td></tr></table></figure></p>
-<p>创建tuple和创建list唯一不同之处是用( )替代了[ ]。<br><strong>创建单元素tuple</strong><br>单元素的List可以用[1]这样的格式，那Tuple可以用(1)这种格式吗？<br>显然这是不可以的，因为()既可以表示tuple，又可以作为括号表示运算时的优先级，结果 (1) 被Python解释器计算出结果 1，导致我们得到的不是tuple，而是整数 1。<br>所以正确的姿势是(1,)，Python在打印单元素tuple时，也自动添加了一个“,”，为了更明确地告诉你这是一个tuple。<br><strong>List为元素</strong><br>前面说过Tuple的元素不可变，那如果元素是List呢？<br>打印一下看看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; t = (&apos;a&apos;, &apos;b&apos;, [&apos;A&apos;, &apos;B&apos;])</span><br><span class="line">&gt;&gt;&gt; L = t[2]</span><br><span class="line">&gt;&gt;&gt; L[0] = &apos;X&apos;</span><br><span class="line">&gt;&gt;&gt; L[1] = &apos;Y&apos;</span><br><span class="line">&gt;&gt;&gt; print t</span><br><span class="line">(&apos;a&apos;, &apos;b&apos;, [&apos;X&apos;, &apos;Y&apos;])</span><br></pre></td></tr></table></figure></p>
-<p>可以发现，Tuple中的List元素改变了，可以这么理解：<br>表面上看，tuple的元素确实变了，但其实变的不是 tuple 的元素，而是list的元素。<br>tuple一开始指向的list并没有改成别的list，所以，tuple所谓的<strong>“不变”</strong>是说，tuple的每个元素，指向永远不变。即<strong>指向’a’，就不能改成指向’b’</strong>，指向一个list，就不能改成指向其他对象，但指向的这个list本身是可变的！<br>理解了<strong>“指向不变”</strong>后，要创建一个内容也不变的tuple怎么做？那就必须保证tuple的每一个元素本身也不能变。</p>
-<hr>
-<p>未完待续</p>
+<p>这个顺序是由底层向上层排的,但为了方便学习,我会从上层入手,逐步深入的学习。</p>
+<p>学习过程中大量参考了<a href="http://blog.csdn.net/luoshengyang/article/details/6618363" target="_blank" rel="external">罗升阳老师</a>及<a href="https://www.zhihu.com/question/39440766/answer/89210950" target="_blank" rel="external">Gityuan</a>的博文,在此表示感谢!</p>
 
       
     </div>
@@ -354,7 +352,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag">#python</a>
+            <a href="/tags/Binder/" rel="tag">#Binder</a>
           
         </div>
       
@@ -363,16 +361,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/03/21/AsyncTask分析/" rel="next" title="AsyncTask源码分析">
-                <i class="fa fa-chevron-left"></i> AsyncTask源码分析
+              <a href="/2016/04/26/python学习笔记4-面向对象/" rel="next" title="python学习笔记4-面向对象">
+                <i class="fa fa-chevron-left"></i> python学习笔记4-面向对象
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/04/17/python学习笔记2-函数、高级特性/" rel="prev" title="python学习笔记2-函数、高级特性">
-                python学习笔记2-函数、高级特性 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/05/Android IPC机制2-AIDL的使用/" rel="prev" title="Android IPC机制2-AIDL的使用">
+                Android IPC机制2-AIDL的使用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -388,10 +386,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/04/11/python学习笔记1-环境搭建、基本语法/"
-     data-title="python学习笔记1-环境搭建、基本语法"
+        <div class="ds-share flat" data-thread-key="2016/04/30/Android IPC机制1-Binder概述及学习计划/"
+     data-title="Android IPC机制1-Binder概述及学习计划"
      data-content=""
-     data-url="http://dubhex.com/2016/04/11/python学习笔记1-环境搭建、基本语法/">
+     data-url="http://dubhex.com/2016/04/30/Android IPC机制1-Binder概述及学习计划/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -418,8 +416,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/04/11/python学习笔记1-环境搭建、基本语法/"
-           data-title="python学习笔记1-环境搭建、基本语法" data-url="http://dubhex.com/2016/04/11/python学习笔记1-环境搭建、基本语法/">
+      <div class="ds-thread" data-thread-key="2016/04/30/Android IPC机制1-Binder概述及学习计划/"
+           data-title="Android IPC机制1-Binder概述及学习计划" data-url="http://dubhex.com/2016/04/30/Android IPC机制1-Binder概述及学习计划/">
       </div>
     
   </div>
@@ -525,7 +523,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#python开发环境配置"><span class="nav-number">1.</span> <span class="nav-text">python开发环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量与基本数据类型"><span class="nav-number">2.</span> <span class="nav-text">变量与基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码格式与基本语句"><span class="nav-number">3.</span> <span class="nav-text">代码格式与基本语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-与Tuple类型"><span class="nav-number">4.</span> <span class="nav-text">List 与Tuple类型</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Binder概述"><span class="nav-number">1.</span> <span class="nav-text">Binder概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux的进程间通信机制"><span class="nav-number">1.1.</span> <span class="nav-text">Linux的进程间通信机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各个进程间通信方式比较"><span class="nav-number">1.2.</span> <span class="nav-text">各个进程间通信方式比较:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder的优势"><span class="nav-number">1.3.</span> <span class="nav-text">Binder的优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder的缺点"><span class="nav-number">1.4.</span> <span class="nav-text">Binder的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习计划"><span class="nav-number">2.</span> <span class="nav-text">学习计划</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
