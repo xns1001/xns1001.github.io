@@ -65,13 +65,13 @@
 <meta property="og:site_name" content="DubheX's Blog">
 <meta property="og:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
 我们知道，Android系统是基于Linux内核的，而Li">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-05-22T03:10:59.772Z">
+<meta property="og:image" content="http://7xrven.com1.z0.glb.clouddn.com/binder_ipc_flow.jpg">
+<meta property="og:updated_time" content="2016-05-22T05:09:02.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android IPC机制1-Binder概述及学习计划">
 <meta name="twitter:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
 我们知道，Android系统是基于Linux内核的，而Li">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="http://7xrven.com1.z0.glb.clouddn.com/binder_ipc_flow.jpg">
 
 
 
@@ -326,7 +326,7 @@
 <p>从语言层面，Binder更适合基于面向对象语言的Android系统，对于Linux系统可能会有点“水土不服”。<strong>另外，Binder是为Android这类系统而生，而并非Linux社区没有想到Binder IPC机制的存在。</strong>也并非Linux现有的IPC机制不够好，相反地，经过这么多优秀工程师的不断打磨，依然非常优秀，每种Linux的IPC机制都有存在的价值，同时在Android系统中也依然采用了大量Linux现有的IPC机制，根据每类IPC的原理特性，因时制宜，不同场景特性往往会采用其下最适宜的。比如在<strong>Android OS中的Zygote进程的IPC采用的是Socket（套接字）机制</strong>，Android中的<strong>Kill Process采用的signal（信号）机制</strong>等等。而<strong>Binder更多则用在system_server进程与上层App层的IPC交互</strong>。</p>
 <h3 id="Binder的缺点"><a href="#Binder的缺点" class="headerlink" title="Binder的缺点"></a>Binder的缺点</h3><p>Binder对CPU和内存的需求比较低，效率比较高，从而进一步说明Binder适合于移动系统Android，但是，也有一定缺点，就是不同利用Binder输出大数据，比如利用Binder传输几M大小的图片，便会出现异常，虽然有厂商会增加Binder内存，但是也不可能比系统默认内存大很多，否则整个系统的可用内存大幅度降低。</p>
 <p>讲了Binder的这么多好处,就来看看Binder是如何运行起来的吧!</p>
-<h2 id="学习计划"><a href="#学习计划" class="headerlink" title="学习计划"></a>学习计划</h2><p><img src="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Binder通信流程"></p>
+<h2 id="学习计划"><a href="#学习计划" class="headerlink" title="学习计划"></a>学习计划</h2><p><img src="http://7xrven.com1.z0.glb.clouddn.com/binder_ipc_flow.jpg" alt="Binder通信流程"></p>
 <p>完成一次Client到Server通信的流转还是比较复杂的,从应用层到Framework层、从UserSpace到KernelSpace、从Java层到Jni层都涉及到了。Binder学习的这个过程也可以对Android、Linux系统有更深入的了解。</p>
 <p>废话就不多说了，回到正题。个人先简单总结了几大主要步骤:</p>
 <ol>
