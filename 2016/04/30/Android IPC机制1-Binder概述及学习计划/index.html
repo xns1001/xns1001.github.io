@@ -66,7 +66,7 @@
 <meta property="og:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
 我们知道，Android系统是基于Linux内核的，而Li">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1689700-34685aeaf5485cdd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-05-22T03:05:02.236Z">
+<meta property="og:updated_time" content="2016-05-22T03:10:59.772Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android IPC机制1-Binder概述及学习计划">
 <meta name="twitter:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
@@ -296,8 +296,8 @@
 
       
         <h2 id="Binder概述"><a href="#Binder概述" class="headerlink" title="Binder概述"></a>Binder概述</h2><h3 id="Linux的进程间通信机制"><a href="#Linux的进程间通信机制" class="headerlink" title="Linux的进程间通信机制"></a>Linux的进程间通信机制</h3><p><a href="http://lib.csdn.net/base/15" target="_blank" rel="external">Android</a>系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。</p>
-<pre><code>我们知道，Android系统是基于Linux内核的，而Linux内核继承和兼容了丰富的Unix系统进程间通信（IPC）机制。有传统的管道（Pipe）、信号（Signal）和跟踪（Trace），这三项通信手段只能用于父进程与子进程之间，或者兄弟进程之间；后来又增加了命令管道（Named Pipe），使得进程间通信不再局限于父子进程或者兄弟进程之间；为了更好地支持商业应用中的事务处理，在AT&amp;T的Unix系统V中，又增加了三种称为“System V IPC”的进程间通信机制，分别是报文队列（Message）、共享内存（Share Memory）和信号量（Semaphore）；后来BSD Unix对“System V IPC”机制进行了重要的扩充，提供了一种称为插口（Socket）的进程间通信机制。若想进一步详细了解这些进程间通信机制，建议参考罗升阳老师的[Android学习启动篇](http://blog.csdn.net/luoshengyang/article/details/6557518)一文中提到《Linux内核源代码情景分析》一书。
-</code></pre><a id="more"></a>
+<p>我们知道，Android系统是基于Linux内核的，而Linux内核继承和兼容了丰富的Unix系统进程间通信（IPC）机制。有传统的管道（Pipe）、信号（Signal）和跟踪（Trace），这三项通信手段只能用于父进程与子进程之间，或者兄弟进程之间；后来又增加了命令管道（Named Pipe），使得进程间通信不再局限于父子进程或者兄弟进程之间；为了更好地支持商业应用中的事务处理，在AT&amp;T的Unix系统V中，又增加了三种称为“System V IPC”的进程间通信机制，分别是报文队列（Message）、共享内存（Share Memory）和信号量（Semaphore）；后来BSD Unix对“System V IPC”机制进行了重要的扩充，提供了一种称为插口（Socket）的进程间通信机制。若想进一步详细了解这些进程间通信机制，建议参考罗升阳老师的<a href="http://blog.csdn.net/luoshengyang/article/details/6557518" target="_blank" rel="external">Android学习启动篇</a>一文中提到《Linux内核源代码情景分析》一书。</p>
+<a id="more"></a>
 <h3 id="各个进程间通信方式比较"><a href="#各个进程间通信方式比较" class="headerlink" title="各个进程间通信方式比较:"></a>各个进程间通信方式比较:</h3><ul>
 <li><strong>管道：</strong>在创建时分配一个page大小的内存，缓存区大小比较有限；</li>
 <li><strong>消息队列</strong>：信息复制两次，额外的CPU消耗；不合适频繁或信息量大的通信；</li>
