@@ -246,6 +246,106 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/05/Android IPC机制4-ServiceManager的addService与getService实现/" itemprop="url">
+                  Android IPC机制4-ServiceManager的addService与getService实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-05T00:00:00+08:00" content="2016-06-05">
+              2016-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/05/Android IPC机制4-ServiceManager的addService与getService实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/Android IPC机制4-ServiceManager的addService与getService实现/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>普通client或者server在获得servicemanger的proxy对象后,肯定就要使用了。对于server来说，主要是调用addService,向serivceManager注册。而client则是通过serivcemanager查询所需server的信息，然后得到server的proxy对象。</p>
+<h2 id="注册服务-addService"><a href="#注册服务-addService" class="headerlink" title="注册服务-addService"></a>注册服务-addService</h2><p>以Native层的服务mediaservice为例，我们先来分析下server是如何向SerivceManager注册的吧</p>
+<p>先来看入口 <code>main_mediaserver.cpp</code>的main函数中的与ServiceManager相关的代码:<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/05/Android IPC机制4-ServiceManager的addService与getService实现/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/15/Android IPC机制3-如何获得ServiceManager接口/" itemprop="url">
                   Android IPC机制3-如何获得ServiceManager接口
                 </a>
@@ -1125,113 +1225,13 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/07/HTTPS学习/" itemprop="url">
-                  HTTPS学习
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-07T00:00:00+08:00" content="2016-03-07">
-              2016-03-07
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/07/HTTPS学习/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/HTTPS学习/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="Http与Https的区别"><a href="#Http与Https的区别" class="headerlink" title="Http与Https的区别"></a>Http与Https的区别</h2><hr>
-<p>简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  </p>
-<h2 id="HTTPS是如何保障安全的"><a href="#HTTPS是如何保障安全的" class="headerlink" title="HTTPS是如何保障安全的"></a>HTTPS是如何保障安全的</h2><hr>
-<p>HTTPS其实就是<strong>secure http</strong>的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTTP协议之下是传输协议TCP。TCP负责传输，HTTP则定义了数据如何进行包装。</p>
-<blockquote>
-<p><strong>传输加密的流程</strong>:原先是应用层将数据直接给到TCP进行传输，现在改成应用层将数据给到TLS/SSL，将数据加密后，再给到TCP进行传输。</p>
-</blockquote>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/03/07/HTTPS学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1270,7 +1270,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

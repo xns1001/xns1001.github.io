@@ -60,7 +60,7 @@
 <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="DubheX's Blog">
-<meta property="og:url" content="http://dubhex.com/archives/2016/03/index.html">
+<meta property="og:url" content="http://dubhex.com/page/2/index.html">
 <meta property="og:site_name" content="DubheX's Blog">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -83,7 +83,7 @@
   };
 </script>
 
-  <title> 归档 | DubheX's Blog </title>
+  <title> DubheX's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -114,7 +114,9 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -221,140 +223,118 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
+  <section id="posts" class="posts-expand">
+    
+      
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  
+  
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 11 篇日志。 继续努力。
-    </span>
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
 
-      
-      
-      
-
-      
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/07/HTTPS学习/" itemprop="url">
+                  HTTPS学习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-07T00:00:00+08:00" content="2016-03-07">
+              2016-03-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/07/HTTPS学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/07/HTTPS学习/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
         </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
       
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/03/21/AsyncTask分析/" itemprop="url">
-              
-                <span itemprop="name">AsyncTask源码分析</span>
-              
+          <h2 id="Http与Https的区别"><a href="#Http与Https的区别" class="headerlink" title="Http与Https的区别"></a>Http与Https的区别</h2><hr>
+<p>简单的讲,Http协议的客户端和服务端通信采用的是明文(post请求也只是将数据放在header中,但依然是明文传输。而Hppts协议的客户端和服务端间通信采用的秘文传输（对称加密和非对称加密相结合）  </p>
+<h2 id="HTTPS是如何保障安全的"><a href="#HTTPS是如何保障安全的" class="headerlink" title="HTTPS是如何保障安全的"></a>HTTPS是如何保障安全的</h2><hr>
+<p>HTTPS其实就是<strong>secure http</strong>的意思,也就是HTTP的安全升级版。稍微了解网络基础的同学都知道，HTTP是应用层协议，位于HTTP协议之下是传输协议TCP。TCP负责传输，HTTP则定义了数据如何进行包装。</p>
+<blockquote>
+<p><strong>传输加密的流程</strong>:原先是应用层将数据直接给到TCP进行传输，现在改成应用层将数据给到TLS/SSL，将数据加密后，再给到TCP进行传输。</p>
+</blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/07/HTTPS学习/#more" rel="contents">
+              阅读全文 &raquo;
             </a>
+          </div>
         
-      </h1>
+      
+    </div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-03-21T00:00:00+08:00"
-              content="2016-03-21" >
-          03-21
-        </time>
-      </div>
+    <div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </article>
 
 
-
     
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/03/19/onActivityResult的执行时机/" itemprop="url">
-              
-                <span itemprop="name">onActivityResult的执行时机</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-03-19T00:00:00+08:00"
-              content="2016-03-19" >
-          03-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/03/07/HTTPS学习/" itemprop="url">
-              
-                <span itemprop="name">HTTPS学习</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-03-07T00:00:00+08:00"
-              content="2016-03-07" >
-          03-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
   </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 
@@ -529,12 +509,6 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
-
 
   
 
