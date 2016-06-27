@@ -295,7 +295,7 @@
 
       
         
-          <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h2><p>Client进程通过RPC(Remote Procedure Call Protocol)与Server通信，整个通信过程从client进程到server进程,从内核态到用户态都涉及到了，前面几篇文章也讲了很多。而真正在Client和Server两端建立通信的基础设施便是Binder Driver。总结一下，Android系统Binder机制中的四个组件Client、Server、Service Manager和Binder驱动程序的关系如下图所示 （图片来自<a href="http://blog.csdn.net/luoshengyang/article/details/6618363">老罗博客</a>）</p>
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Client进程通过RPC(Remote Procedure Call Protocol)与Server通信，整个通信过程从client进程到server进程,从内核态到用户态都涉及到了，前面几篇文章也讲了很多。而真正在Client和Server两端建立通信的基础设施便是Binder Driver。总结一下，Android系统Binder机制中的四个组件Client、Server、Service Manager和Binder驱动程序的关系如下图所示 （图片来自<a href="http://blog.csdn.net/luoshengyang/article/details/6618363">老罗博客</a>）</p>
 <p> <img src="http://upload-images.jianshu.io/upload_images/1689700-2cf166141f7d1167.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Binder通信架构">：</p>
 <p>Binder驱动是Android专用的，但底层的驱动架构与Linux驱动一样。binder驱动在以misc设备进行注册，作为虚拟设备，没有直接操作硬件，只是对设备内存的处理。主要是驱动设备的初始化(binder_init)，打开 (binder_open)，映射(binder_mmap)，数据操作(binder_ioctl)。后面会详细讲解这几个函数，但为了后面的理解，先来看看内核态、用户态、系统调用等概念。<br>
           <div class="post-more-link text-center">
