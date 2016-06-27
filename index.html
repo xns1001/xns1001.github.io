@@ -246,6 +246,106 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/26/Android IPC机制5-Binder驱动探究/" itemprop="url">
+                  Android IPC机制5-Binder驱动探究
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-26T00:00:00+08:00" content="2016-06-26">
+              2016-06-26
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/26/Android IPC机制5-Binder驱动探究/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/26/Android IPC机制5-Binder驱动探究/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h2><p>Client进程通过RPC(Remote Procedure Call Protocol)与Server通信，整个通信过程从client进程到server进程,从内核态到用户态都涉及到了，前面几篇文章也讲了很多。而真正在Client和Server两端建立通信的基础设施便是Binder Driver。总结一下，Android系统Binder机制中的四个组件Client、Server、Service Manager和Binder驱动程序的关系如下图所示 （图片来自<a href="http://blog.csdn.net/luoshengyang/article/details/6618363">老罗博客</a>）</p>
+<p> <img src="http://upload-images.jianshu.io/upload_images/1689700-2cf166141f7d1167.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Binder通信架构">：</p>
+<p>Binder驱动是Android专用的，但底层的驱动架构与Linux驱动一样。binder驱动在以misc设备进行注册，作为虚拟设备，没有直接操作硬件，只是对设备内存的处理。主要是驱动设备的初始化(binder_init)，打开 (binder_open)，映射(binder_mmap)，数据操作(binder_ioctl)。后面会详细讲解这几个函数，但为了后面的理解，先来看看内核态、用户态、系统调用等概念。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/26/Android IPC机制5-Binder驱动探究/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/05/Android IPC机制4-ServiceManager的addService与getService实现/" itemprop="url">
                   Android IPC机制4-ServiceManager的addService与getService实现
                 </a>
@@ -1124,107 +1224,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/19/onActivityResult的执行时机/" itemprop="url">
-                  onActivityResult的执行时机
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-19T00:00:00+08:00" content="2016-03-19">
-              2016-03-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/19/onActivityResult的执行时机/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/19/onActivityResult的执行时机/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
-<p>前两天遇到了个onActivityResult执行时机错误的问题，在解决过程中学习了些onActivityResult与setResult的一些细节，记录一下。</p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><hr>
-<p>项目接入一个第三方sdk时，需要在一个webview的容器Activity A中调起登录Activity B，完成登录后，Activity B-&gt;setResult-&gt;finish。这时不是应该A的onActivityResult执行吗？可是却什么都没有发生。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/03/19/onActivityResult的执行时机/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1270,7 +1269,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
