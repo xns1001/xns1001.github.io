@@ -66,7 +66,7 @@
 <meta property="og:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
 我们知道，Android系统是基于Linux内核的，而Li">
 <meta property="og:image" content="http://7xrven.com1.z0.glb.clouddn.com/binder_ipc_flow.jpg">
-<meta property="og:updated_time" content="2016-05-22T05:09:02.628Z">
+<meta property="og:updated_time" content="2016-06-28T14:00:16.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android IPC机制1-Binder概述及学习计划">
 <meta name="twitter:description" content="Binder概述Linux的进程间通信机制Android系统中，每一个应用程序都是由一些Activity和Service组成的，这些Activity和Service有可能运行在同一个进程中，也有可能运行在不同的进程中。那么，不在同一个进程的Activity或者Service是如何通信的呢？这就是本文中要介绍的Binder进程间通信机制了。
@@ -302,7 +302,7 @@
 <li><strong>管道：</strong>在创建时分配一个page大小的内存，缓存区大小比较有限；</li>
 <li><strong>消息队列</strong>：信息复制两次，额外的CPU消耗；不合适频繁或信息量大的通信；</li>
 <li><strong>共享内存</strong>：无须复制，共享缓冲区直接付附加到进程虚拟地址空间，速度快；但进程间的同步问题操作系统无法实现，必须各进程利用同步工具解决；</li>
-<li><strong>套接字</strong>：作为更通用的接口，传输效率低，主要用于不通机器或跨网络的通信；</li>
+<li><strong>套接字</strong>：作为更通用的接口，传输效率低，主要用于不同机器或跨网络的通信；</li>
 <li><strong>信号量</strong>：常作为一种锁机制，防止某进程正在访问共享资源时，其他进程也访问该资源。因此，主要作为进程间以及同一进程内不同线程之间的同步手段。</li>
 <li><strong>信号</strong>: 不适用于信息交换，更适用于进程中断控制，比如非法内存访问，杀死某个进程等；</li>
 </ul>
