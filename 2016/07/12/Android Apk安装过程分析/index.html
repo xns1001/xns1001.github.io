@@ -1,0 +1,838 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PMS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="这两天在看Android65535方法数的解决方法,遇到了些Apk安装过程的疑惑,于是决定好好学习下Android Apk安装过程,特此记录。本文以Android5.0的源码为例,分析下Apk的安装过程;
+Apk安装的主要步骤:为了学习这个过程,真的是陷入了pms的源码很久,也看了很多前人的博文,才算是有了些思路,所以此处先把主要步骤列出来,后面再慢慢分析细节。
+
+将apk文件复制到data/ap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Apk安装过程分析">
+<meta property="og:url" content="http://dubhex.com/2016/07/12/Android Apk安装过程分析/index.html">
+<meta property="og:site_name" content="DubheX's Blog">
+<meta property="og:description" content="这两天在看Android65535方法数的解决方法,遇到了些Apk安装过程的疑惑,于是决定好好学习下Android Apk安装过程,特此记录。本文以Android5.0的源码为例,分析下Apk的安装过程;
+Apk安装的主要步骤:为了学习这个过程,真的是陷入了pms的源码很久,也看了很多前人的博文,才算是有了些思路,所以此处先把主要步骤列出来,后面再慢慢分析细节。
+
+将apk文件复制到data/ap">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1689700-735a0fc9e593d921.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-07-13T13:58:29.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Apk安装过程分析">
+<meta name="twitter:description" content="这两天在看Android65535方法数的解决方法,遇到了些Apk安装过程的疑惑,于是决定好好学习下Android Apk安装过程,特此记录。本文以Android5.0的源码为例,分析下Apk的安装过程;
+Apk安装的主要步骤:为了学习这个过程,真的是陷入了pms的源码很久,也看了很多前人的博文,才算是有了些思路,所以此处先把主要步骤列出来,后面再慢慢分析细节。
+
+将apk文件复制到data/ap">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1689700-735a0fc9e593d921.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Android Apk安装过程分析 | DubheX's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?969589c3b5a707b9bc85e22c68f00a61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">DubheX's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'LbTKfyCUc6oLGYwwZ8hu','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android Apk安装过程分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-12T00:00:00+08:00" content="2016-07-12">
+              2016-07-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/12/Android Apk安装过程分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/12/Android Apk安装过程分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这两天在看Android65535方法数的解决方法,遇到了些Apk安装过程的疑惑,于是决定好好学习下Android Apk安装过程,特此记录。本文以Android5.0的源码为例,分析下Apk的安装过程;</p>
+<h2 id="Apk安装的主要步骤"><a href="#Apk安装的主要步骤" class="headerlink" title="Apk安装的主要步骤:"></a>Apk安装的主要步骤:</h2><p>为了学习这个过程,真的是陷入了pms的源码很久,也看了很多前人的博文,才算是有了些思路,所以此处先把主要步骤列出来,后面再慢慢分析细节。</p>
+<ul>
+<li>将apk文件复制到<code>data/app</code>目录</li>
+<li>解析apk信息</li>
+<li>dexopt操作</li>
+<li>更新权限信息</li>
+<li>完成安装,发送<code>Intent.ACTION_PACKAGE_ADDED</code>广播</li>
+</ul>
+<a id="more"></a>
+<p>下面将具体步骤列张图出来:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1689700-735a0fc9e593d921.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>由图可见安装过程中流转的步骤还是比较多的,下面具体分析下</p>
+<h2 id="将apk文件copy至data-app目录"><a href="#将apk文件copy至data-app目录" class="headerlink" title="将apk文件copy至data/app目录"></a>将apk文件copy至<code>data/app</code>目录</h2><h3 id="installPackageAsUser"><a href="#installPackageAsUser" class="headerlink" title="installPackageAsUser"></a>installPackageAsUser</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">mContext.enforceCallingOrSelfPermission(android.Manifest.permission.INSTALL_PACKAGES, null);</span><br><span class="line"></span><br><span class="line">       final int callingUid = Binder.getCallingUid();</span><br><span class="line">       ...</span><br><span class="line">       ...</span><br><span class="line"></span><br><span class="line">       if ((callingUid == Process.SHELL_UID) || (callingUid == Process.ROOT_UID)) &#123;</span><br><span class="line">           installFlags |= PackageManager.INSTALL_FROM_ADB;</span><br><span class="line"></span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           // Caller holds INSTALL_PACKAGES permission, so we&apos;re less strict</span><br><span class="line">           // about installerPackageName.</span><br><span class="line"></span><br><span class="line">           installFlags &amp;= ~PackageManager.INSTALL_FROM_ADB;</span><br><span class="line">           installFlags &amp;= ~PackageManager.INSTALL_ALL_USERS;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       UserHandle user;</span><br><span class="line">       if ((installFlags &amp; PackageManager.INSTALL_ALL_USERS) != 0) &#123;</span><br><span class="line">           user = UserHandle.ALL;</span><br><span class="line">       &#125; else &#123;</span><br><span class="line">           user = new UserHandle(userId);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       verificationParams.setInstallerUid(callingUid);</span><br><span class="line"></span><br><span class="line">       final File originFile = new File(originPath);</span><br><span class="line">       final OriginInfo origin = OriginInfo.fromUntrustedFile(originFile);</span><br><span class="line"></span><br><span class="line">       final Message msg = mHandler.obtainMessage(INIT_COPY);</span><br><span class="line">       msg.obj = new InstallParams(origin, observer, installFlags,</span><br><span class="line">               installerPackageName, verificationParams, user, packageAbiOverride);</span><br><span class="line">       mHandler.sendMessage(msg);</span><br></pre></td></tr></table></figure>
+<p>这个方法主要是判断安装来源,包括adb,shell,all_user,然后像PMS的<code>mHandler</code>发送<code>INIT_COPY</code>的消息,这个<code>mHandler</code>运行在一个<code>HandlerThread</code>中。</p>
+<h3 id="handleMessage-INIT-COPY-amp-handleMessage-MCS-BOUND"><a href="#handleMessage-INIT-COPY-amp-handleMessage-MCS-BOUND" class="headerlink" title="handleMessage(INIT_COPY)&amp;handleMessage(MCS_BOUND)"></a>handleMessage(INIT_COPY)&amp;handleMessage(MCS_BOUND)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">case INIT_COPY:&#123;</span><br><span class="line">                    HandlerParams params = (HandlerParams) msg.obj;</span><br><span class="line">                    int idx = mPendingInstalls.size();</span><br><span class="line">                    if (DEBUG_INSTALL) Slog.i(TAG, &quot;init_copy idx=&quot; + idx + &quot;: &quot; + params);</span><br><span class="line">                    // If a bind was already initiated we dont really</span><br><span class="line">                    // need to do anything. The pending install</span><br><span class="line">                    // will be processed later on.</span><br><span class="line">                    if (!mBound) &#123;</span><br><span class="line">                        // If this is the only one pending we might</span><br><span class="line">                        // have to bind to the service again.</span><br><span class="line">                        if (!connectToService()) &#123;</span><br><span class="line">                            Slog.e(TAG, &quot;Failed to bind to media container service&quot;);</span><br><span class="line">                            params.serviceError();</span><br><span class="line">                            return;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            // Once we bind to the service, the first</span><br><span class="line">                            // pending request will be processed.</span><br><span class="line">                            mPendingInstalls.add(idx, params);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        mPendingInstalls.add(idx, params);</span><br><span class="line">                        // Already bound to the service. Just make</span><br><span class="line">                        // sure we trigger off processing the first request.</span><br><span class="line">                        if (idx == 0) &#123;</span><br><span class="line">                            mHandler.sendEmptyMessage(MCS_BOUND);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">&#125;</span><br><span class="line">case MCS_BOUND:&#123;</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"> HandlerParams params = mPendingInstalls.get(0);</span><br><span class="line">                        if (params != null) &#123;</span><br><span class="line">                            if (params.startCopy()) &#123;</span><br><span class="line">                                // We are done...  look for more work or to</span><br><span class="line">                                // go idle.</span><br><span class="line">                                if (DEBUG_SD_INSTALL) Log.i(TAG,</span><br><span class="line">                                        &quot;Checking for more work or unbind...&quot;);</span><br><span class="line">                                // Delete pending install</span><br><span class="line">                                if (mPendingInstalls.size() &gt; 0) &#123;</span><br><span class="line">                                    mPendingInstalls.remove(0);</span><br><span class="line">                                &#125;</span><br><span class="line">                                if (mPendingInstalls.size() == 0) &#123;</span><br><span class="line">                                    if (mBound) &#123;</span><br><span class="line">                                        if (DEBUG_SD_INSTALL) Log.i(TAG,</span><br><span class="line">                                                &quot;Posting delayed MCS_UNBIND&quot;);</span><br><span class="line">                                        removeMessages(MCS_UNBIND);</span><br><span class="line">                                        Message ubmsg = obtainMessage(MCS_UNBIND);</span><br><span class="line">                                        // Unbind after a little delay, to avoid</span><br><span class="line">                                        // continual thrashing.</span><br><span class="line">                                        sendMessageDelayed(ubmsg, 10000);</span><br><span class="line">                                    &#125;</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>INIT_COPY主要是确保<code>DefaultContainerService</code>已bound,<code>DefaultContainerService</code>是一个应用服务，具体负责实现APK等相关资源文件在内部或外部存储器上的存储工作。而<code>MCS_BOUND</code>中则执行了<br><code>params.startCopy()</code>这句,也是最关键的开始copy文件。</p>
+<h3 id="HandlerParams-startCopy"><a href="#HandlerParams-startCopy" class="headerlink" title="HandlerParams.startCopy"></a>HandlerParams.startCopy</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">final boolean startCopy() &#123;</span><br><span class="line">          boolean res;</span><br><span class="line">          try &#123;</span><br><span class="line">              if (DEBUG_INSTALL) Slog.i(TAG, &quot;startCopy &quot; + mUser + &quot;: &quot; + this);</span><br><span class="line"></span><br><span class="line">              if (++mRetries &gt; MAX_RETRIES) &#123;</span><br><span class="line">                  Slog.w(TAG, &quot;Failed to invoke remote methods on default container service. Giving up&quot;);</span><br><span class="line">                  mHandler.sendEmptyMessage(MCS_GIVE_UP);</span><br><span class="line">                  handleServiceError();</span><br><span class="line">                  return false;</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                  handleStartCopy();</span><br><span class="line">                  res = true;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125; catch (RemoteException e) &#123;</span><br><span class="line">              if (DEBUG_INSTALL) Slog.i(TAG, &quot;Posting install MCS_RECONNECT&quot;);</span><br><span class="line">              mHandler.sendEmptyMessage(MCS_RECONNECT);</span><br><span class="line">              res = false;</span><br><span class="line">          &#125;</span><br><span class="line">          handleReturnCode();</span><br><span class="line">          return res;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<p>该方法中除了检查重试次数外只是简单的调用了<code>handleStartCopy()</code>及<code>handleReturnCode()</code>方法.</p>
+<h3 id="handleStartCopy"><a href="#handleStartCopy" class="headerlink" title="handleStartCopy()"></a>handleStartCopy()</h3><p>这个方法内容非常多,下面只列出些核心部分<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public void handleStartCopy() throws RemoteException &#123;</span><br><span class="line">          int ret = PackageManager.INSTALL_SUCCEEDED;</span><br><span class="line">           ...</span><br><span class="line">           ...</span><br><span class="line">           final boolean onSd = (installFlags &amp; PackageManager.INSTALL_EXTERNAL) != 0;</span><br><span class="line">           final boolean onInt = (installFlags &amp; PackageManager.INSTALL_INTERNAL) != 0;</span><br><span class="line"></span><br><span class="line">           PackageInfoLite pkgLite = null;</span><br><span class="line"></span><br><span class="line">           if (onInt &amp;&amp; onSd) &#123;</span><br><span class="line">               // Check if both bits are set.</span><br><span class="line">               Slog.w(TAG, &quot;Conflicting flags specified for installing on both internal and external&quot;);</span><br><span class="line">               ret = PackageManager.INSTALL_FAILED_INVALID_INSTALL_LOCATION;</span><br><span class="line">           &#125; else &#123;</span><br><span class="line">               pkgLite = mContainerService.getMinimalPackageInfo(origin.resolvedPath, installFlags,</span><br><span class="line">                       packageAbiOverride);</span><br><span class="line"></span><br><span class="line">               /*</span><br><span class="line">                * If we have too little free space, try to free cache</span><br><span class="line">                * before giving up.</span><br><span class="line">                */</span><br><span class="line">               if (!origin.staged &amp;&amp; pkgLite.recommendedInstallLocation</span><br><span class="line">                       == PackageHelper.RECOMMEND_FAILED_INSUFFICIENT_STORAGE) &#123;</span><br><span class="line">                   final StorageManager storage = StorageManager.from(mContext);</span><br><span class="line">                   final long lowThreshold = storage.getStorageLowBytes(</span><br><span class="line">                           Environment.getDataDirectory());</span><br><span class="line"></span><br><span class="line">                   final long sizeBytes = mContainerService.calculateInstalledSize(</span><br><span class="line">                           origin.resolvedPath, isForwardLocked(), packageAbiOverride);</span><br><span class="line"></span><br><span class="line">                   if (mInstaller.freeCache(sizeBytes + lowThreshold) &gt;= 0) &#123;</span><br><span class="line">                       pkgLite = mContainerService.getMinimalPackageInfo(origin.resolvedPath,</span><br><span class="line">                               installFlags, packageAbiOverride);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           ...</span><br><span class="line">           ...</span><br><span class="line">                    * No package verification is enabled, so immediately start</span><br><span class="line">                    * the remote call to initiate copy using temporary file.</span><br><span class="line">                    */</span><br><span class="line">                   ret = args.copyApk(mContainerService, true);</span><br><span class="line">              </span><br><span class="line">           &#125;</span><br><span class="line">           mRet = ret;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>handleStartCopy</code>的核心就是copyApk,其他的都是些存储空间检查,权限检查等等安全校验</p>
+<h2 id="解析apk信息"><a href="#解析apk信息" class="headerlink" title="解析apk信息"></a>解析apk信息</h2><p>完成apk copy到<code>data/app</code>目录的操作后,下一步就到了 <code>handleReturnCode</code>,这个方法又跳转到<code>processPendingInstall()</code>方法,下面先来看看<code>processPendingInstall()</code>方法:</p>
+<p>###<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">private void processPendingInstall(final InstallArgs args, final int currentStatus) &#123;</span><br><span class="line">    // Queue up an async operation since the package installation may take a little while.</span><br><span class="line">    mHandler.post(new Runnable() &#123;</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            mHandler.removeCallbacks(this);</span><br><span class="line">             // Result object to be returned</span><br><span class="line">            PackageInstalledInfo res = new PackageInstalledInfo();</span><br><span class="line">            res.returnCode = currentStatus;</span><br><span class="line">            res.uid = -1;</span><br><span class="line">            res.pkg = null;</span><br><span class="line">            res.removedInfo = new PackageRemovedInfo();</span><br><span class="line">            if (res.returnCode == PackageManager.INSTALL_SUCCEEDED) &#123;</span><br><span class="line">                args.doPreInstall(res.returnCode);</span><br><span class="line">                synchronized (mInstallLock) &#123;</span><br><span class="line">                    installPackageLI(args, res); //1.安装</span><br><span class="line">                &#125;</span><br><span class="line">                args.doPostInstall(res.returnCode, res.uid);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // A restore should be performed at this point if (a) the install</span><br><span class="line">            // succeeded, (b) the operation is not an update, and (c) the new</span><br><span class="line">            // package has not opted out of backup participation.</span><br><span class="line">            final boolean update = res.removedInfo.removedPackage != null;</span><br><span class="line">            final int flags = (res.pkg == null) ? 0 : res.pkg.applicationInfo.flags;</span><br><span class="line">            boolean doRestore = !update</span><br><span class="line">                    &amp;&amp; ((flags &amp; ApplicationInfo.FLAG_ALLOW_BACKUP) != 0);</span><br><span class="line"></span><br><span class="line">            // Set up the post-install work request bookkeeping.  This will be used</span><br><span class="line">            // and cleaned up by the post-install event handling regardless of whether</span><br><span class="line">            // there&apos;s a restore pass performed.  Token values are &gt;= 1.</span><br><span class="line">            int token;</span><br><span class="line">            if (mNextInstallToken &lt; 0) mNextInstallToken = 1;</span><br><span class="line">            token = mNextInstallToken++;</span><br><span class="line"></span><br><span class="line">            PostInstallData data = new PostInstallData(args, res);</span><br><span class="line">            mRunningInstalls.put(token, data);</span><br><span class="line">            if (DEBUG_INSTALL) Log.v(TAG, &quot;+ starting restore round-trip &quot; + token);</span><br><span class="line"></span><br><span class="line">            if (res.returnCode == PackageManager.INSTALL_SUCCEEDED &amp;&amp; doRestore) &#123;</span><br><span class="line">                // Pass responsibility to the Backup Manager.  It will perform a</span><br><span class="line">                // restore if appropriate, then pass responsibility back to the</span><br><span class="line">                // Package Manager to run the post-install observer callbacks</span><br><span class="line">                // and broadcasts.</span><br><span class="line">                IBackupManager bm = IBackupManager.Stub.asInterface(</span><br><span class="line">                        ServiceManager.getService(Context.BACKUP_SERVICE));</span><br><span class="line">                if (bm != null) &#123;</span><br><span class="line">                    if (DEBUG_INSTALL) Log.v(TAG, &quot;token &quot; + token</span><br><span class="line">                            + &quot; to BM for possible restore&quot;);</span><br><span class="line">                    try &#123;</span><br><span class="line">                        bm.restoreAtInstall(res.pkg.applicationInfo.packageName, token); //2.调用backup服务</span><br><span class="line">                    &#125; catch (RemoteException e) &#123;</span><br><span class="line">                        // can&apos;t happen; the backup manager is local</span><br><span class="line">                    &#125; catch (Exception e) &#123;</span><br><span class="line">                        Slog.e(TAG, &quot;Exception trying to enqueue restore&quot;, e);</span><br><span class="line">                        doRestore = false;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    Slog.e(TAG, &quot;Backup Manager not found!&quot;);</span><br><span class="line">                    doRestore = false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!doRestore) &#123;</span><br><span class="line">                // No restore possible, or the Backup Manager was mysteriously not</span><br><span class="line">                // available -- just fire the post-install work request directly.</span><br><span class="line">                if (DEBUG_INSTALL) Log.v(TAG, &quot;No restore - queue post-install for &quot; + token);</span><br><span class="line">                Message msg = mHandler.obtainMessage(POST_INSTALL, token, 0);</span><br><span class="line">                mHandler.sendMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法有几个关键步骤,一是<code>installPackageLI(args, res);</code>,这个方法具体执行了解析package和后续操作,而再<code>installPackageLI(args, res);</code>执行完毕后会走到<code>bm.restoreAtInstall(res.pkg.applicationInfo.packageName, token);</code>,会调用backupservice的<code>restoreAtInstall</code>方法,而<code>restoreAtInstall</code>方法最终又会调用<code>PMS</code>的<code>finishPackageInstall()</code>方法,完成安装。</p>
+<h3 id="installPackageLI-args-res"><a href="#installPackageLI-args-res" class="headerlink" title="installPackageLI(args, res)"></a>installPackageLI(args, res)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line">private void installPackageLI(InstallArgs args, PackageInstalledInfo res) &#123;</span><br><span class="line">        final int installFlags = args.installFlags;</span><br><span class="line">        String installerPackageName = args.installerPackageName;</span><br><span class="line">        File tmpPackageFile = new File(args.getCodePath());</span><br><span class="line">        boolean forwardLocked = ((installFlags &amp; PackageManager.INSTALL_FORWARD_LOCK) != 0);</span><br><span class="line">        boolean onSd = ((installFlags &amp; PackageManager.INSTALL_EXTERNAL) != 0);</span><br><span class="line">        boolean replace = false;</span><br><span class="line">        final int scanFlags = SCAN_NEW_INSTALL | SCAN_FORCE_DEX | SCAN_UPDATE_SIGNATURE;</span><br><span class="line">        // Result object to be returned</span><br><span class="line">        res.returnCode = PackageManager.INSTALL_SUCCEEDED;</span><br><span class="line"></span><br><span class="line">        if (DEBUG_INSTALL) Slog.d(TAG, &quot;installPackageLI: path=&quot; + tmpPackageFile);</span><br><span class="line">        // Retrieve PackageSettings and parse package</span><br><span class="line">        final int parseFlags = mDefParseFlags | PackageParser.PARSE_CHATTY</span><br><span class="line">                | (forwardLocked ? PackageParser.PARSE_FORWARD_LOCK : 0)</span><br><span class="line">                | (onSd ? PackageParser.PARSE_ON_SDCARD : 0);</span><br><span class="line">        PackageParser pp = new PackageParser();</span><br><span class="line">        pp.setSeparateProcesses(mSeparateProcesses);</span><br><span class="line">        pp.setDisplayMetrics(mMetrics);</span><br><span class="line"></span><br><span class="line">        final PackageParser.Package pkg;</span><br><span class="line">        try &#123;</span><br><span class="line">            pkg = pp.parsePackage(tmpPackageFile, parseFlags);</span><br><span class="line">        &#125; catch (PackageParserException e) &#123;</span><br><span class="line">            res.setError(&quot;Failed parse during installPackageLI&quot;, e);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Mark that we have an install time CPU ABI override.</span><br><span class="line">        pkg.cpuAbiOverride = args.abiOverride;</span><br><span class="line"></span><br><span class="line">        String pkgName = res.name = pkg.packageName;</span><br><span class="line">        if ((pkg.applicationInfo.flags&amp;ApplicationInfo.FLAG_TEST_ONLY) != 0) &#123;</span><br><span class="line">            if ((installFlags &amp; PackageManager.INSTALL_ALLOW_TEST) == 0) &#123;</span><br><span class="line">                res.setError(INSTALL_FAILED_TEST_ONLY, &quot;installPackageLI&quot;);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            pp.collectCertificates(pkg, parseFlags);</span><br><span class="line">            pp.collectManifestDigest(pkg);</span><br><span class="line">        &#125; catch (PackageParserException e) &#123;</span><br><span class="line">            res.setError(&quot;Failed collect during installPackageLI&quot;, e);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /* If the installer passed in a manifest digest, compare it now. */</span><br><span class="line">        if (args.manifestDigest != null) &#123;</span><br><span class="line">            if (DEBUG_INSTALL) &#123;</span><br><span class="line">                final String parsedManifest = pkg.manifestDigest == null ? &quot;null&quot;</span><br><span class="line">                        : pkg.manifestDigest.toString();</span><br><span class="line">                Slog.d(TAG, &quot;Comparing manifests: &quot; + args.manifestDigest.toString() + &quot; vs. &quot;</span><br><span class="line">                        + parsedManifest);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!args.manifestDigest.equals(pkg.manifestDigest)) &#123;</span><br><span class="line">                res.setError(INSTALL_FAILED_PACKAGE_CHANGED, &quot;Manifest digest changed&quot;);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (DEBUG_INSTALL) &#123;</span><br><span class="line">            final String parsedManifest = pkg.manifestDigest == null</span><br><span class="line">                    ? &quot;null&quot; : pkg.manifestDigest.toString();</span><br><span class="line">            Slog.d(TAG, &quot;manifestDigest was not present, but parser got: &quot; + parsedManifest);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Get rid of all references to package scan path via parser.</span><br><span class="line">        pp = null;</span><br><span class="line">        String oldCodePath = null;</span><br><span class="line">        boolean systemApp = false;</span><br><span class="line">        synchronized (mPackages) &#123;</span><br><span class="line">            // Check whether the newly-scanned package wants to define an already-defined perm</span><br><span class="line">            int N = pkg.permissions.size();</span><br><span class="line">            for (int i = N-1; i &gt;= 0; i--) &#123;</span><br><span class="line">                PackageParser.Permission perm = pkg.permissions.get(i);</span><br><span class="line">                BasePermission bp = mSettings.mPermissions.get(perm.info.name);</span><br><span class="line">                if (bp != null) &#123;</span><br><span class="line">                    // If the defining package is signed with our cert, it&apos;s okay.  This</span><br><span class="line">                    // also includes the &quot;updating the same package&quot; case, of course.</span><br><span class="line">                    // &quot;updating same package&quot; could also involve key-rotation.</span><br><span class="line">                    final boolean sigsOk;</span><br><span class="line">                    if (!bp.sourcePackage.equals(pkg.packageName)</span><br><span class="line">                            || !(bp.packageSetting instanceof PackageSetting)</span><br><span class="line">                            || !bp.packageSetting.keySetData.isUsingUpgradeKeySets()</span><br><span class="line">                            || ((PackageSetting) bp.packageSetting).sharedUser != null) &#123;</span><br><span class="line">                        sigsOk = compareSignatures(bp.packageSetting.signatures.mSignatures,</span><br><span class="line">                                pkg.mSignatures) == PackageManager.SIGNATURE_MATCH;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        sigsOk = checkUpgradeKeySetLP((PackageSetting) bp.packageSetting, pkg);</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (!sigsOk) &#123;</span><br><span class="line">                        // If the owning package is the system itself, we log but allow</span><br><span class="line">                        // install to proceed; we fail the install on all other permission</span><br><span class="line">                        // redefinitions.</span><br><span class="line">                        if (!bp.sourcePackage.equals(&quot;android&quot;)) &#123;</span><br><span class="line">                            res.setError(INSTALL_FAILED_DUPLICATE_PERMISSION, &quot;Package &quot;</span><br><span class="line">                                    + pkg.packageName + &quot; attempting to redeclare permission &quot;</span><br><span class="line">                                    + perm.info.name + &quot; already owned by &quot; + bp.sourcePackage);</span><br><span class="line">                            res.origPermission = perm.info.name;</span><br><span class="line">                            res.origPackage = bp.sourcePackage;</span><br><span class="line">                            return;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            Slog.w(TAG, &quot;Package &quot; + pkg.packageName</span><br><span class="line">                                    + &quot; attempting to redeclare system permission &quot;</span><br><span class="line">                                    + perm.info.name + &quot;; ignoring new declaration&quot;);</span><br><span class="line">                            pkg.permissions.remove(i);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // Check if installing already existing package</span><br><span class="line">            if ((installFlags &amp; PackageManager.INSTALL_REPLACE_EXISTING) != 0) &#123;</span><br><span class="line">                String oldName = mSettings.mRenamedPackages.get(pkgName);</span><br><span class="line">                if (pkg.mOriginalPackages != null</span><br><span class="line">                        &amp;&amp; pkg.mOriginalPackages.contains(oldName)</span><br><span class="line">                        &amp;&amp; mPackages.containsKey(oldName)) &#123;</span><br><span class="line">                    // This package is derived from an original package,</span><br><span class="line">                    // and this device has been updating from that original</span><br><span class="line">                    // name.  We must continue using the original name, so</span><br><span class="line">                    // rename the new package here.</span><br><span class="line">                    pkg.setPackageName(oldName);</span><br><span class="line">                    pkgName = pkg.packageName;</span><br><span class="line">                    replace = true;</span><br><span class="line">                    if (DEBUG_INSTALL) Slog.d(TAG, &quot;Replacing existing renamed package: oldName=&quot;</span><br><span class="line">                            + oldName + &quot; pkgName=&quot; + pkgName);</span><br><span class="line">                &#125; else if (mPackages.containsKey(pkgName)) &#123;</span><br><span class="line">                    // This package, under its official name, already exists</span><br><span class="line">                    // on the device; we should replace it.</span><br><span class="line">                    replace = true;</span><br><span class="line">                    if (DEBUG_INSTALL) Slog.d(TAG, &quot;Replace existing pacakge: &quot; + pkgName);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            PackageSetting ps = mSettings.mPackages.get(pkgName);</span><br><span class="line">            if (ps != null) &#123;</span><br><span class="line">                if (DEBUG_INSTALL) Slog.d(TAG, &quot;Existing package: &quot; + ps);</span><br><span class="line">                oldCodePath = mSettings.mPackages.get(pkgName).codePathString;</span><br><span class="line">                if (ps.pkg != null &amp;&amp; ps.pkg.applicationInfo != null) &#123;</span><br><span class="line">                    systemApp = (ps.pkg.applicationInfo.flags &amp;</span><br><span class="line">                            ApplicationInfo.FLAG_SYSTEM) != 0;</span><br><span class="line">                &#125;</span><br><span class="line">                res.origUsers = ps.queryInstalledUsers(sUserManager.getUserIds(), true);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (systemApp &amp;&amp; onSd) &#123;</span><br><span class="line">            // Disable updates to system apps on sdcard</span><br><span class="line">            res.setError(INSTALL_FAILED_INVALID_INSTALL_LOCATION,</span><br><span class="line">                    &quot;Cannot install updates to system apps on sdcard&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!args.doRename(res.returnCode, pkg, oldCodePath)) &#123;</span><br><span class="line">            res.setError(INSTALL_FAILED_INSUFFICIENT_STORAGE, &quot;Failed rename&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (replace) &#123;</span><br><span class="line">            replacePackageLI(pkg, parseFlags, scanFlags | SCAN_REPLACING, args.user,</span><br><span class="line">                    installerPackageName, res);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            installNewPackageLI(pkg, parseFlags, scanFlags | SCAN_DELETE_DATA_ON_FAILURES,</span><br><span class="line">                    args.user, installerPackageName, res);</span><br><span class="line">        &#125;</span><br><span class="line">        synchronized (mPackages) &#123;</span><br><span class="line">            final PackageSetting ps = mSettings.mPackages.get(pkgName);</span><br><span class="line">            if (ps != null) &#123;</span><br><span class="line">                res.newUsers = ps.queryInstalledUsers(sUserManager.getUserIds(), true);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法先是解析了package包,然后做了大量签名和权限校验的工作,最终会走到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (replace) &#123;</span><br><span class="line">          replacePackageLI(pkg, parseFlags, scanFlags | SCAN_REPLACING, args.user,</span><br><span class="line">                  installerPackageName, res);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">          installNewPackageLI(pkg, parseFlags, scanFlags | SCAN_DELETE_DATA_ON_FAILURES,</span><br><span class="line">                  args.user, installerPackageName, res);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这两个方法分别是覆盖安装和安装新应用对应的具体执行.我们来看看<code>installNewPackageLI()</code></p>
+<h3 id="installNewPackageLI"><a href="#installNewPackageLI" class="headerlink" title="installNewPackageLI()"></a>installNewPackageLI()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">private void installNewPackageLI(PackageParser.Package pkg,</span><br><span class="line">        int parseFlags, int scanFlags, UserHandle user,</span><br><span class="line">        String installerPackageName, PackageInstalledInfo res) &#123;</span><br><span class="line">    // Remember this for later, in case we need to rollback this install</span><br><span class="line">    String pkgName = pkg.packageName;</span><br><span class="line"></span><br><span class="line">    if (DEBUG_INSTALL) Slog.d(TAG, &quot;installNewPackageLI: &quot; + pkg);</span><br><span class="line">    boolean dataDirExists = getDataPathForPackage(pkg.packageName, 0).exists();</span><br><span class="line">    synchronized(mPackages) &#123;</span><br><span class="line">        if (mSettings.mRenamedPackages.containsKey(pkgName)) &#123;</span><br><span class="line">            // A package with the same name is already installed, though</span><br><span class="line">            // it has been renamed to an older name.  The package we</span><br><span class="line">            // are trying to install should be installed as an update to</span><br><span class="line">            // the existing one, but that has not been requested, so bail.</span><br><span class="line">            res.setError(INSTALL_FAILED_ALREADY_EXISTS, &quot;Attempt to re-install &quot; + pkgName</span><br><span class="line">                    + &quot; without first uninstalling package running as &quot;</span><br><span class="line">                    + mSettings.mRenamedPackages.get(pkgName));</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        if (mPackages.containsKey(pkgName)) &#123;</span><br><span class="line">            // Don&apos;t allow installation over an existing package with the same name.</span><br><span class="line">            res.setError(INSTALL_FAILED_ALREADY_EXISTS, &quot;Attempt to re-install &quot; + pkgName</span><br><span class="line">                    + &quot; without first uninstalling.&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        PackageParser.Package newPackage = scanPackageLI(pkg, parseFlags, scanFlags,</span><br><span class="line">                System.currentTimeMillis(), user);</span><br><span class="line"></span><br><span class="line">        updateSettingsLI(newPackage, installerPackageName, null, null, res);</span><br><span class="line">        // delete the partially installed application. the data directory will have to be</span><br><span class="line">        // restored if it was already existing</span><br><span class="line">        if (res.returnCode != PackageManager.INSTALL_SUCCEEDED) &#123;</span><br><span class="line">            // remove package from internal structures.  Note that we want deletePackageX to</span><br><span class="line">            // delete the package data and cache directories that it created in</span><br><span class="line">            // scanPackageLocked, unless those directories existed before we even tried to</span><br><span class="line">            // install.</span><br><span class="line">            deletePackageLI(pkgName, UserHandle.ALL, false, null, null,</span><br><span class="line">                    dataDirExists ? PackageManager.DELETE_KEEP_DATA : 0,</span><br><span class="line">                            res.removedInfo, true);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; catch (PackageManagerException e) &#123;</span><br><span class="line">        res.setError(&quot;Package couldn&apos;t be installed in &quot; + pkg.codePath, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法核心的步骤有两个:</p>
+<ul>
+<li><code>PackageParser.Package newPackage = scanPackageLI(pkg, parseFlags, scanFlags,System.currentTimeMillis(), user);</code></li>
+<li><code>updateSettingsLI(newPackage, installerPackageName, null, null, res);</code></li>
+</ul>
+<p>scanPackageLI负责安装,而updateSettingLI则是完成安装后的设置信息更新</p>
+<h3 id="scanPackageLI"><a href="#scanPackageLI" class="headerlink" title="scanPackageLI()"></a>scanPackageLI()</h3><p>scanPackageLI()方法主要逻辑是由<code>scanPackageDirtyLI()</code>实现的,<code>scanPackageDirtyLI()</code>实在太长了,此处就不列出了,主要说下,这个方法实现了以下操作:</p>
+<ul>
+<li>设置系统App的一些参数</li>
+<li>校验签名</li>
+<li>解析app的provider,校验是否与已有的provider冲突</li>
+<li>32/64位abi的一些设置</li>
+<li>四大组件的解析，注册</li>
+</ul>
+<p><code>scanPackageDirtyLI()</code>里面的操作确实是太多了，并不止这几点。如需更详细的信息还请查看源码。</p>
+<p>另一方面，这个方法里,会调用到<code>performDexOptLI()</code>,其会去执行<code>dexopt操作</code>。</p>
+<h2 id="dexopt操作"><a href="#dexopt操作" class="headerlink" title="dexopt操作"></a>dexopt操作</h2><p>Apk文件其实只是一个归档zip压缩包,而我们编写的代码最终都编译成了<code>.dex</code>文件,但为了提高运行性能,android系统并不会直接执行<code>.dex</code>,而是会在安装过程中执行<code>dexopt</code>操作来优化<code>.dex</code>文件,最终android系统执行的时优化后的’odex’文件(注意:这个odex文件的后缀也是.dex,其路径在<code>data/dalvik-cache</code>)。对于<code>dalvik</code>虚拟机,<code>dexopt</code>就是优化操作,而对于<code>art</code>虚拟机,<code>dexopt</code>执行的则是<code>dex2oat</code>操作,既将<code>.dex</code>文件翻译成<code>oat</code>文件。关于<code>art</code>和<code>dex2oat</code>的更多信息请看后文。</p>
+<p>这里我们先来看看<code>PMS</code>的<code>dexopt</code>操作:</p>
+<h3 id="performDexOptLI"><a href="#performDexOptLI" class="headerlink" title="performDexOptLI()"></a>performDexOptLI()</h3><p>这个方法的核心是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> ret = mInstaller.dexopt(path, sharedGid, !isForwardLocked(pkg), pkg.packageName, dexCodeInstructionSet, vmSafeMode);</span><br></pre></td></tr></table></figure></p>
+<p>其作用就是调用<code>PMS</code>的<code>mInstaller</code>成员变量的<code>dexopt</code>操作。</p>
+<h3 id="Installer-dexopt"><a href="#Installer-dexopt" class="headerlink" title="Installer.dexopt"></a>Installer.dexopt</h3><p>Installer类的dexopt方法又调用<code>InstallerConnection</code>类的<code>dexopt</code>方法,来看看这个方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">public int dexopt(String apkPath, int uid, boolean isPublic, String pkgName,</span><br><span class="line">            String instructionSet, boolean vmSafeMode) &#123;</span><br><span class="line">        StringBuilder builder = new StringBuilder(&quot;dexopt&quot;);</span><br><span class="line">        builder.append(&apos; &apos;);</span><br><span class="line">        builder.append(apkPath);</span><br><span class="line">        builder.append(&apos; &apos;);</span><br><span class="line">        builder.append(uid);</span><br><span class="line">        builder.append(isPublic ? &quot; 1&quot; : &quot; 0&quot;);</span><br><span class="line">        builder.append(&apos; &apos;);</span><br><span class="line">        builder.append(pkgName);</span><br><span class="line">        builder.append(&apos; &apos;);</span><br><span class="line">        builder.append(instructionSet);</span><br><span class="line">        builder.append(&apos; &apos;);</span><br><span class="line">        builder.append(vmSafeMode ? &quot; 1&quot; : &quot; 0&quot;);</span><br><span class="line">        return execute(builder.toString());</span><br><span class="line">    &#125;</span><br><span class="line"> public synchronized String transact(String cmd) &#123;</span><br><span class="line">        if (!connect()) &#123;</span><br><span class="line">            Slog.e(TAG, &quot;connection failed&quot;);</span><br><span class="line">            return &quot;-1&quot;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!writeCommand(cmd)) &#123;</span><br><span class="line">            /*</span><br><span class="line">             * If installd died and restarted in the background (unlikely but</span><br><span class="line">             * possible) we&apos;ll fail on the next write (this one). Try to</span><br><span class="line">             * reconnect and write the command one more time before giving up.</span><br><span class="line">             */</span><br><span class="line">            Slog.e(TAG, &quot;write command failed? reconnect!&quot;);</span><br><span class="line">            if (!connect() || !writeCommand(cmd)) &#123;</span><br><span class="line">                return &quot;-1&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (LOCAL_DEBUG) &#123;</span><br><span class="line">            Slog.i(TAG, &quot;send: &apos;&quot; + cmd + &quot;&apos;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        final int replyLength = readReply();</span><br><span class="line">        if (replyLength &gt; 0) &#123;</span><br><span class="line">            String s = new String(buf, 0, replyLength);</span><br><span class="line">            if (LOCAL_DEBUG) &#123;</span><br><span class="line">                Slog.i(TAG, &quot;recv: &apos;&quot; + s + &quot;&apos;&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            return s;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (LOCAL_DEBUG) &#123;</span><br><span class="line">                Slog.i(TAG, &quot;fail&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            return &quot;-1&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int execute(String cmd) &#123;</span><br><span class="line">        String res = transact(cmd);</span><br><span class="line">        try &#123;</span><br><span class="line">            return Integer.parseInt(res);</span><br><span class="line">        &#125; catch (NumberFormatException ex) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  private boolean connect() &#123;</span><br><span class="line">        if (mSocket != null) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        Slog.i(TAG, &quot;connecting...&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            mSocket = new LocalSocket();</span><br><span class="line"></span><br><span class="line">            LocalSocketAddress address = new LocalSocketAddress(&quot;installd&quot;,</span><br><span class="line">                    LocalSocketAddress.Namespace.RESERVED);</span><br><span class="line"></span><br><span class="line">            mSocket.connect(address);</span><br><span class="line"></span><br><span class="line">            mIn = mSocket.getInputStream();</span><br><span class="line">            mOut = mSocket.getOutputStream();</span><br><span class="line">        &#125; catch (IOException ex) &#123;</span><br><span class="line">            disconnect();</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>由上面的几个方法可以知道,最终<code>dexopt</code>操作是通过<strong>socket</strong>的方式来跨进程通知守护进程<code>installd</code>,由其去执行<code>dexopt</code>操作。</p>
+<h3 id="commands-dexopt"><a href="#commands-dexopt" class="headerlink" title="commands::dexopt()"></a>commands::dexopt()</h3><p>最终守护进程<code>installd</code>会调用<code>Commands.c</code>文件(位于<code>/source/framework/native/cmds/installd</code>)的<code>dexopt</code>方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">int dexopt(const char *apk_path, uid_t uid, bool is_public,</span><br><span class="line">           const char *pkgname, const char *instruction_set,</span><br><span class="line">           bool vm_safe_mode, bool is_patchoat)</span><br><span class="line">&#123;</span><br><span class="line">    struct utimbuf ut;</span><br><span class="line">    struct stat input_stat, dex_stat;</span><br><span class="line">    char out_path[PKG_PATH_MAX];</span><br><span class="line">    char persist_sys_dalvik_vm_lib[PROPERTY_VALUE_MAX];</span><br><span class="line">    char *end;</span><br><span class="line">    const char *input_file;</span><br><span class="line">    char in_odex_path[PKG_PATH_MAX];</span><br><span class="line">    int res, input_fd=-1, out_fd=-1;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    pid_t pid;</span><br><span class="line">    pid = fork();</span><br><span class="line">    if (pid == 0) &#123;</span><br><span class="line">        /* child -- drop privileges before continuing */</span><br><span class="line">        if (setgid(uid) != 0) &#123;</span><br><span class="line">            ALOGE(&quot;setgid(%d) failed in installd during dexopt\n&quot;, uid);</span><br><span class="line">            exit(64);</span><br><span class="line">        &#125;</span><br><span class="line">        if (setuid(uid) != 0) &#123;</span><br><span class="line">            ALOGE(&quot;setuid(%d) failed in installd during dexopt\n&quot;, uid);</span><br><span class="line">            exit(65);</span><br><span class="line">        &#125;</span><br><span class="line">        // drop capabilities</span><br><span class="line">        struct __user_cap_header_struct capheader;</span><br><span class="line">        struct __user_cap_data_struct capdata[2];</span><br><span class="line">        memset(&amp;capheader, 0, sizeof(capheader));</span><br><span class="line">        memset(&amp;capdata, 0, sizeof(capdata));</span><br><span class="line">        capheader.version = _LINUX_CAPABILITY_VERSION_3;</span><br><span class="line">        if (capset(&amp;capheader, &amp;capdata[0]) &lt; 0) &#123;</span><br><span class="line">            ALOGE(&quot;capset failed: %s\n&quot;, strerror(errno));</span><br><span class="line">            exit(66);</span><br><span class="line">        &#125;</span><br><span class="line">        if (set_sched_policy(0, SP_BACKGROUND) &lt; 0) &#123;</span><br><span class="line">            ALOGE(&quot;set_sched_policy failed: %s\n&quot;, strerror(errno));</span><br><span class="line">            exit(70);</span><br><span class="line">        &#125;</span><br><span class="line">        if (flock(out_fd, LOCK_EX | LOCK_NB) != 0) &#123;</span><br><span class="line">            ALOGE(&quot;flock(%s) failed: %s\n&quot;, out_path, strerror(errno));</span><br><span class="line">            exit(67);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (strncmp(persist_sys_dalvik_vm_lib, &quot;libdvm&quot;, 6) == 0) &#123;</span><br><span class="line">            run_dexopt(input_fd, out_fd, input_file, out_path);</span><br><span class="line">        &#125; else if (strncmp(persist_sys_dalvik_vm_lib, &quot;libart&quot;, 6) == 0) &#123;</span><br><span class="line">            if (is_patchoat) &#123;</span><br><span class="line">                run_patchoat(input_fd, out_fd, input_file, out_path, pkgname, instruction_set);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                run_dex2oat(input_fd, out_fd, input_file, out_path, pkgname, instruction_set,</span><br><span class="line">                            vm_safe_mode);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            exit(69);   /* Unexpected persist.sys.dalvik.vm.lib value */</span><br><span class="line">        &#125;</span><br><span class="line">        exit(68);   /* only get here on exec failure */</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        res = wait_child(pid);</span><br><span class="line">        if (res == 0) &#123;</span><br><span class="line">            ALOGV(&quot;DexInv: --- END &apos;%s&apos; (success) ---\n&quot;, input_file);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ALOGE(&quot;DexInv: --- END &apos;%s&apos; --- status=0x%04x, process failed\n&quot;, input_file, res);</span><br><span class="line">            goto fail;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ut.actime = input_stat.st_atime;</span><br><span class="line">    ut.modtime = input_stat.st_mtime;</span><br><span class="line">    utime(out_path, &amp;ut);</span><br><span class="line"></span><br><span class="line">    close(out_fd);</span><br><span class="line">    close(input_fd);</span><br><span class="line">    return 0;</span><br><span class="line"></span><br><span class="line">fail:</span><br><span class="line">    if (out_fd &gt;= 0) &#123;</span><br><span class="line">        close(out_fd);</span><br><span class="line">        unlink(out_path);</span><br><span class="line">    &#125;</span><br><span class="line">    if (input_fd &gt;= 0) &#123;</span><br><span class="line">        close(input_fd);</span><br><span class="line">    &#125;</span><br><span class="line">    return -1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由上面的代码可以发现,<code>installd</code>在做了些操作后,<code>fork</code>出了一个新的进程,根据虚拟机的类型为<code>libdvm</code>或<code>libart</code>分别执行<code>run_dexopt</code>或<code>run_dex2oat</code>(如果为is_patchoat,则是<code>run_patchoat</code>)操作。</p>
+<h2 id="更新权限信息"><a href="#更新权限信息" class="headerlink" title="更新权限信息"></a>更新权限信息</h2><p><code>dexopt</code>操作执行完后,<code>installNewPackageLI()</code>方法就会走到<code>updateSettingsLI()</code>来更新设置信息,而更新设置信息主要是权限信息,所以直接来看<code>updatePermissionsLPw()</code>;</p>
+<h3 id="updatePermissionsLPw"><a href="#updatePermissionsLPw" class="headerlink" title="updatePermissionsLPw"></a>updatePermissionsLPw</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br></pre></td><td class="code"><pre><span class="line">private void updatePermissionsLPw(String changingPkg,</span><br><span class="line">            PackageParser.Package pkgInfo, int flags) &#123;</span><br><span class="line">        // Make sure there are no dangling permission trees.</span><br><span class="line">        Iterator&lt;BasePermission&gt; it = mSettings.mPermissionTrees.values().iterator();</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            final BasePermission bp = it.next();</span><br><span class="line">            if (bp.packageSetting == null) &#123;</span><br><span class="line">                // We may not yet have parsed the package, so just see if</span><br><span class="line">                // we still know about its settings.</span><br><span class="line">                bp.packageSetting = mSettings.mPackages.get(bp.sourcePackage);</span><br><span class="line">            &#125;</span><br><span class="line">            if (bp.packageSetting == null) &#123;</span><br><span class="line">                Slog.w(TAG, &quot;Removing dangling permission tree: &quot; + bp.name</span><br><span class="line">                        + &quot; from package &quot; + bp.sourcePackage);</span><br><span class="line">                it.remove();</span><br><span class="line">            &#125; else if (changingPkg != null &amp;&amp; changingPkg.equals(bp.sourcePackage)) &#123;</span><br><span class="line">                if (pkgInfo == null || !hasPermission(pkgInfo, bp.name)) &#123;</span><br><span class="line">                    Slog.i(TAG, &quot;Removing old permission tree: &quot; + bp.name</span><br><span class="line">                            + &quot; from package &quot; + bp.sourcePackage);</span><br><span class="line">                    flags |= UPDATE_PERMISSIONS_ALL;</span><br><span class="line">                    it.remove();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Make sure all dynamic permissions have been assigned to a package,</span><br><span class="line">        // and make sure there are no dangling permissions.</span><br><span class="line">        it = mSettings.mPermissions.values().iterator();</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            final BasePermission bp = it.next();</span><br><span class="line">            if (bp.type == BasePermission.TYPE_DYNAMIC) &#123;</span><br><span class="line">                if (DEBUG_SETTINGS) Log.v(TAG, &quot;Dynamic permission: name=&quot;</span><br><span class="line">                        + bp.name + &quot; pkg=&quot; + bp.sourcePackage</span><br><span class="line">                        + &quot; info=&quot; + bp.pendingInfo);</span><br><span class="line">                if (bp.packageSetting == null &amp;&amp; bp.pendingInfo != null) &#123;</span><br><span class="line">                    final BasePermission tree = findPermissionTreeLP(bp.name);</span><br><span class="line">                    if (tree != null &amp;&amp; tree.perm != null) &#123;</span><br><span class="line">                        bp.packageSetting = tree.packageSetting;</span><br><span class="line">                        bp.perm = new PackageParser.Permission(tree.perm.owner,</span><br><span class="line">                                new PermissionInfo(bp.pendingInfo));</span><br><span class="line">                        bp.perm.info.packageName = tree.perm.info.packageName;</span><br><span class="line">                        bp.perm.info.name = bp.name;</span><br><span class="line">                        bp.uid = tree.uid;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (bp.packageSetting == null) &#123;</span><br><span class="line">                // We may not yet have parsed the package, so just see if</span><br><span class="line">                // we still know about its settings.</span><br><span class="line">                bp.packageSetting = mSettings.mPackages.get(bp.sourcePackage);</span><br><span class="line">            &#125;</span><br><span class="line">            if (bp.packageSetting == null) &#123;</span><br><span class="line">                Slog.w(TAG, &quot;Removing dangling permission: &quot; + bp.name</span><br><span class="line">                        + &quot; from package &quot; + bp.sourcePackage);</span><br><span class="line">                it.remove();</span><br><span class="line">            &#125; else if (changingPkg != null &amp;&amp; changingPkg.equals(bp.sourcePackage)) &#123;</span><br><span class="line">                if (pkgInfo == null || !hasPermission(pkgInfo, bp.name)) &#123;</span><br><span class="line">                    Slog.i(TAG, &quot;Removing old permission: &quot; + bp.name</span><br><span class="line">                            + &quot; from package &quot; + bp.sourcePackage);</span><br><span class="line">                    flags |= UPDATE_PERMISSIONS_ALL;</span><br><span class="line">                    it.remove();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Now update the permissions for all packages, in particular</span><br><span class="line">        // replace the granted permissions of the system packages.</span><br><span class="line">        if ((flags&amp;UPDATE_PERMISSIONS_ALL) != 0) &#123;</span><br><span class="line">            for (PackageParser.Package pkg : mPackages.values()) &#123;</span><br><span class="line">                if (pkg != pkgInfo) &#123;</span><br><span class="line">                    grantPermissionsLPw(pkg, (flags&amp;UPDATE_PERMISSIONS_REPLACE_ALL) != 0,</span><br><span class="line">                            changingPkg);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (pkgInfo != null) &#123;</span><br><span class="line">            grantPermissionsLPw(pkgInfo, (flags&amp;UPDATE_PERMISSIONS_REPLACE_PKG) != 0, changingPkg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private void grantPermissionsLPw(PackageParser.Package pkg, boolean replace,</span><br><span class="line">            String packageOfInterest) &#123;</span><br><span class="line">        final PackageSetting ps = (PackageSetting) pkg.mExtras;</span><br><span class="line">        if (ps == null) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        final GrantedPermissions gp = ps.sharedUser != null ? ps.sharedUser : ps;</span><br><span class="line">        HashSet&lt;String&gt; origPermissions = gp.grantedPermissions;</span><br><span class="line">        boolean changedPermission = false;</span><br><span class="line"></span><br><span class="line">        if (replace) &#123;</span><br><span class="line">            ps.permissionsFixed = false;</span><br><span class="line">            if (gp == ps) &#123;</span><br><span class="line">                origPermissions = new HashSet&lt;String&gt;(gp.grantedPermissions);</span><br><span class="line">                gp.grantedPermissions.clear();</span><br><span class="line">                gp.gids = mGlobalGids;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (gp.gids == null) &#123;</span><br><span class="line">            gp.gids = mGlobalGids;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        final int N = pkg.requestedPermissions.size();</span><br><span class="line">        for (int i=0; i&lt;N; i++) &#123;</span><br><span class="line">            final String name = pkg.requestedPermissions.get(i);</span><br><span class="line">            final boolean required = pkg.requestedPermissionsRequired.get(i);</span><br><span class="line">            final BasePermission bp = mSettings.mPermissions.get(name);</span><br><span class="line">            if (DEBUG_INSTALL) &#123;</span><br><span class="line">                if (gp != ps) &#123;</span><br><span class="line">                    Log.i(TAG, &quot;Package &quot; + pkg.packageName + &quot; checking &quot; + name + &quot;: &quot; + bp);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (bp == null || bp.packageSetting == null) &#123;</span><br><span class="line">                if (packageOfInterest == null || packageOfInterest.equals(pkg.packageName)) &#123;</span><br><span class="line">                    Slog.w(TAG, &quot;Unknown permission &quot; + name</span><br><span class="line">                            + &quot; in package &quot; + pkg.packageName);</span><br><span class="line">                &#125;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            final String perm = bp.name;</span><br><span class="line">            boolean allowed;</span><br><span class="line">            boolean allowedSig = false;</span><br><span class="line">            if ((bp.protectionLevel&amp;PermissionInfo.PROTECTION_FLAG_APPOP) != 0) &#123;</span><br><span class="line">                // Keep track of app op permissions.</span><br><span class="line">                ArraySet&lt;String&gt; pkgs = mAppOpPermissionPackages.get(bp.name);</span><br><span class="line">                if (pkgs == null) &#123;</span><br><span class="line">                    pkgs = new ArraySet&lt;&gt;();</span><br><span class="line">                    mAppOpPermissionPackages.put(bp.name, pkgs);</span><br><span class="line">                &#125;</span><br><span class="line">                pkgs.add(pkg.packageName);</span><br><span class="line">            &#125;</span><br><span class="line">            final int level = bp.protectionLevel &amp; PermissionInfo.PROTECTION_MASK_BASE;</span><br><span class="line">            if (level == PermissionInfo.PROTECTION_NORMAL</span><br><span class="line">                    || level == PermissionInfo.PROTECTION_DANGEROUS) &#123;</span><br><span class="line">                // We grant a normal or dangerous permission if any of the following</span><br><span class="line">                // are true:</span><br><span class="line">                // 1) The permission is required</span><br><span class="line">                // 2) The permission is optional, but was granted in the past</span><br><span class="line">                // 3) The permission is optional, but was requested by an</span><br><span class="line">                //    app in /system (not /data)</span><br><span class="line">                //</span><br><span class="line">                // Otherwise, reject the permission.</span><br><span class="line">                allowed = (required || origPermissions.contains(perm)</span><br><span class="line">                        || (isSystemApp(ps) &amp;&amp; !isUpdatedSystemApp(ps)));</span><br><span class="line">            &#125; else if (bp.packageSetting == null) &#123;</span><br><span class="line">                // This permission is invalid; skip it.</span><br><span class="line">                allowed = false;</span><br><span class="line">            &#125; else if (level == PermissionInfo.PROTECTION_SIGNATURE) &#123;</span><br><span class="line">                allowed = grantSignaturePermission(perm, pkg, bp, origPermissions);</span><br><span class="line">                if (allowed) &#123;</span><br><span class="line">                    allowedSig = true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                allowed = false;</span><br><span class="line">            &#125;</span><br><span class="line">            if (DEBUG_INSTALL) &#123;</span><br><span class="line">                if (gp != ps) &#123;</span><br><span class="line">                    Log.i(TAG, &quot;Package &quot; + pkg.packageName + &quot; granting &quot; + perm);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (allowed) &#123;</span><br><span class="line">                if (!isSystemApp(ps) &amp;&amp; ps.permissionsFixed) &#123;</span><br><span class="line">                    // If this is an existing, non-system package, then</span><br><span class="line">                    // we can&apos;t add any new permissions to it.</span><br><span class="line">                    if (!allowedSig &amp;&amp; !gp.grantedPermissions.contains(perm)) &#123;</span><br><span class="line">                        // Except...  if this is a permission that was added</span><br><span class="line">                        // to the platform (note: need to only do this when</span><br><span class="line">                        // updating the platform).</span><br><span class="line">                        allowed = isNewPlatformPermissionForPackage(perm, pkg);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                if (allowed) &#123;</span><br><span class="line">                    if (!gp.grantedPermissions.contains(perm)) &#123;</span><br><span class="line">                        changedPermission = true;</span><br><span class="line">                        gp.grantedPermissions.add(perm);</span><br><span class="line">                        gp.gids = appendInts(gp.gids, bp.gids);</span><br><span class="line">                    &#125; else if (!ps.haveGids) &#123;</span><br><span class="line">                        gp.gids = appendInts(gp.gids, bp.gids);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    if (packageOfInterest == null || packageOfInterest.equals(pkg.packageName)) &#123;</span><br><span class="line">                        Slog.w(TAG, &quot;Not granting permission &quot; + perm</span><br><span class="line">                                + &quot; to package &quot; + pkg.packageName</span><br><span class="line">                                + &quot; because it was previously installed without&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (gp.grantedPermissions.remove(perm)) &#123;</span><br><span class="line">                    changedPermission = true;</span><br><span class="line">                    gp.gids = removeInts(gp.gids, bp.gids);</span><br><span class="line">                    Slog.i(TAG, &quot;Un-granting permission &quot; + perm</span><br><span class="line">                            + &quot; from package &quot; + pkg.packageName</span><br><span class="line">                            + &quot; (protectionLevel=&quot; + bp.protectionLevel</span><br><span class="line">                            + &quot; flags=0x&quot; + Integer.toHexString(pkg.applicationInfo.flags)</span><br><span class="line">                            + &quot;)&quot;);</span><br><span class="line">                &#125; else if ((bp.protectionLevel&amp;PermissionInfo.PROTECTION_FLAG_APPOP) == 0) &#123;</span><br><span class="line">                    // Don&apos;t print warning for app op permissions, since it is fine for them</span><br><span class="line">                    // not to be granted, there is a UI for the user to decide.</span><br><span class="line">                    if (packageOfInterest == null || packageOfInterest.equals(pkg.packageName)) &#123;</span><br><span class="line">                        Slog.w(TAG, &quot;Not granting permission &quot; + perm</span><br><span class="line">                                + &quot; to package &quot; + pkg.packageName</span><br><span class="line">                                + &quot; (protectionLevel=&quot; + bp.protectionLevel</span><br><span class="line">                                + &quot; flags=0x&quot; + Integer.toHexString(pkg.applicationInfo.flags)</span><br><span class="line">                                + &quot;)&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if ((changedPermission || replace) &amp;&amp; !ps.permissionsFixed &amp;&amp;</span><br><span class="line">                !isSystemApp(ps) || isUpdatedSystemApp(ps))&#123;</span><br><span class="line">            // This is the first that we have heard about this package, so the</span><br><span class="line">            // permissions we have now selected are fixed until explicitly</span><br><span class="line">            // changed.</span><br><span class="line">            ps.permissionsFixed = true;</span><br><span class="line">        &#125;</span><br><span class="line">        ps.haveGids = true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>由上面两个方法可以看到,在apk的安装时<code>PMS</code>会将该app的所有权限都记录下来并更新到<code>PMS</code>的<code>mAppOpPermissionPackages</code>成员变量里面,并判定是否授予该app请求的权限。</p>
+<h2 id="完成安装"><a href="#完成安装" class="headerlink" title="完成安装"></a>完成安装</h2><p>还记得前面说过的在<code>processPendingInstall</code>方法在执行<code>installPackageLi</code>后会执行以下语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">if (res.returnCode == PackageManager.INSTALL_SUCCEEDED &amp;&amp; doRestore) &#123;</span><br><span class="line">                   // Pass responsibility to the Backup Manager.  It will perform a</span><br><span class="line">                   // restore if appropriate, then pass responsibility back to the</span><br><span class="line">                   // Package Manager to run the post-install observer callbacks</span><br><span class="line">                   // and broadcasts.</span><br><span class="line">                   IBackupManager bm = IBackupManager.Stub.asInterface(</span><br><span class="line">                           ServiceManager.getService(Context.BACKUP_SERVICE));</span><br><span class="line">                   if (bm != null) &#123;</span><br><span class="line">                       if (DEBUG_INSTALL) Log.v(TAG, &quot;token &quot; + token</span><br><span class="line">                               + &quot; to BM for possible restore&quot;);</span><br><span class="line">                       try &#123;</span><br><span class="line">                           bm.restoreAtInstall(res.pkg.applicationInfo.packageName, token);</span><br><span class="line">                       &#125; catch (RemoteException e) &#123;</span><br><span class="line">                           // can&apos;t happen; the backup manager is local</span><br><span class="line">                       &#125; catch (Exception e) &#123;</span><br><span class="line">                           Slog.e(TAG, &quot;Exception trying to enqueue restore&quot;, e);</span><br><span class="line">                           doRestore = false;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       Slog.e(TAG, &quot;Backup Manager not found!&quot;);</span><br><span class="line">                       doRestore = false;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我也不是很清楚为什么系统会调用<code>IBackupManager</code>的<code>restoreAtInstall</code>方法,不过发现在<code>BackupManagerService</code>的<code>restoreAtInstall</code>方法中会有以下代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> if (skip) &#123;</span><br><span class="line">            // Auto-restore disabled or no way to attempt a restore; just tell the Package</span><br><span class="line">            // Manager to proceed with the post-install handling for this package.</span><br><span class="line">            if (DEBUG) Slog.v(TAG, &quot;Finishing install immediately&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                mPackageManagerBinder.finishPackageInstall(token);</span><br><span class="line">            &#125; catch (RemoteException e) &#123; /* can&apos;t happen */ &#125;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>最终<code>restoreAtInstall</code>方法又会调用<code>PMS</code>的<code>finishPackageInstall</code>方法,而此方法最终会发送<code>Intent.ACTION_PACKAGE_ADDED</code>广播，apk的安装就到到此结束了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PMS/" rel="tag">#PMS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/26/Android IPC机制5-Binder驱动探究/" rel="next" title="Android IPC机制5-Binder驱动探究">
+                <i class="fa fa-chevron-left"></i> Android IPC机制5-Binder驱动探究
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/07/12/Android Apk安装过程分析/"
+     data-title="Android Apk安装过程分析"
+     data-content=""
+     data-url="http://dubhex.com/2016/07/12/Android Apk安装过程分析/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/12/Android Apk安装过程分析/"
+           data-title="Android Apk安装过程分析" data-url="http://dubhex.com/2016/07/12/Android Apk安装过程分析/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xrven.com1.z0.glb.clouddn.com/profile_photo.jpg"
+               alt="DubheX" />
+          <p class="site-author-name" itemprop="name">DubheX</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/DubheX" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.cnblogs.com/xns1001/" target="_blank">
+                  
+                    <i class="fa fa-cnblogs"></i> cnblogs
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apk安装的主要步骤"><span class="nav-number">1.</span> <span class="nav-text">Apk安装的主要步骤:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将apk文件copy至data-app目录"><span class="nav-number">2.</span> <span class="nav-text">将apk文件copy至data/app目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#installPackageAsUser"><span class="nav-number">2.1.</span> <span class="nav-text">installPackageAsUser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#handleMessage-INIT-COPY-amp-handleMessage-MCS-BOUND"><span class="nav-number">2.2.</span> <span class="nav-text">handleMessage(INIT_COPY)&handleMessage(MCS_BOUND)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HandlerParams-startCopy"><span class="nav-number">2.3.</span> <span class="nav-text">HandlerParams.startCopy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#handleStartCopy"><span class="nav-number">2.4.</span> <span class="nav-text">handleStartCopy()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析apk信息"><span class="nav-number">3.</span> <span class="nav-text">解析apk信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#installPackageLI-args-res"><span class="nav-number">3.1.</span> <span class="nav-text">installPackageLI(args, res)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#installNewPackageLI"><span class="nav-number">3.2.</span> <span class="nav-text">installNewPackageLI()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scanPackageLI"><span class="nav-number">3.3.</span> <span class="nav-text">scanPackageLI()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dexopt操作"><span class="nav-number">4.</span> <span class="nav-text">dexopt操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#performDexOptLI"><span class="nav-number">4.1.</span> <span class="nav-text">performDexOptLI()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Installer-dexopt"><span class="nav-number">4.2.</span> <span class="nav-text">Installer.dexopt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commands-dexopt"><span class="nav-number">4.3.</span> <span class="nav-text">commands::dexopt()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新权限信息"><span class="nav-number">5.</span> <span class="nav-text">更新权限信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#updatePermissionsLPw"><span class="nav-number">5.1.</span> <span class="nav-text">updatePermissionsLPw</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完成安装"><span class="nav-number">6.</span> <span class="nav-text">完成安装</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DubheX</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.scheme !== 'Pisces' && (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always')) {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"dubhex"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+
+</body>
+</html>
